@@ -1,0 +1,902 @@
+<!------------------------------------------------------------------------------------------
+	
+	a j a x . h t m l
+	
+------------------------------------------------------------------------------------------->
+ 
+ 
+ 
+<!------------------------------------------------------------------------------------------
+	
+	Admin functions <li> brought in via AJAX. Loaded into <li id="ajaxAdmin"></li>
+	
+------------------------------------------------------------------------------------------->
+        		<li class="dropdown" id="admin">
+          			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          				Admin
+          				<span class="caret"></span></a>
+          			<ul class="dropdown-menu">
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+								Data
+								<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="manageData.html">
+									Manage Data</a></li>
+								<li><a href="sessionsDemo.html">
+									OpenCPU Sessions Demo</a></li>
+								<li><a href="uploadFootfall.html">
+									Upload Footfall</a></li>
+								<li><a href="users.html">
+									User Accounts</a></li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a class="dropdown-toggle proposed" data-toggle="dropdown"
+								href="#">
+								Tasks
+								<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="#scheduleReports" class="proposed">
+									Schedule Reports</a></li>
+								<li><a href="#updateBlog" class="proposed">
+									Update Blog</a></li>
+								<li><a href="#updateCalendar" class="proposed">
+									Update Calendar</a></li>
+							</ul>
+						</li>
+            		</ul>
+        		</li>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Common loadable <nav> brought in via AJAX. Loaded into <div id="ajaxNav"></div>
+	
+------------------------------------------------------------------------------------------->
+<nav class="navbar navbar-inverse navbar-fixed-top navbar-custom" role="navigation">
+ 	<div class="container-fluid"> 		<!-- needed to center and pad navbar content -->
+		<!-- Brand and toggle get grouped for better mobile display -->
+    	<div class="navbar-header">
+      		<button type="button" class="navbar-toggle" data-toggle="collapse"
+      			data-target="#navbar-collapse">
+				<span class="sr-only">toggle navigation</span>
+				<span class="icon-bar"></span>
+        		<span class="icon-bar"></span>
+        		<span class="icon-bar"></span>                        
+      		</button>
+      		<a class="navbar-brand" href="index.html">OMIS</a>
+    	</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+    	<div class="collapse navbar-collapse" id="navbar-collapse">
+      		<ul class="nav navbar-nav">
+      		
+      		    <div id="ajaxAdmin"></div>  
+      		      		
+        		<li class="dropdown">
+          			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          				Analytics
+          				<span class="caret"></span></a>
+          			<ul class="dropdown-menu">
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+								Yorkshire & The Humber (Region/NUTS-1)
+								<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="nuts1DataTime.html">
+									Data * Time</a></li>
+								<li><a href="nuts1DataStack.html">
+									Data Stack * Time</a></li>
+								<li><a href="nuts1Turnover.html">
+									Turnover ~ Independent<a/></li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+								North Yorkshire County Council (County/NUTS-3)
+								<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="nuts3DataTime.html">
+									Data * Time</a></li>
+								<li><a href="nuts3DataStack.html">
+									Data Stack * Time</a></li>
+								<li><a href="nuts3Turnover.html">
+									Turnover ~ Independent></a></li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+								Scarborough (LAD/NUTS-4)
+								<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="nuts4DataTime.html">
+									Data * Time</a></li>
+								<li><a href="nuts4DataStack.html">
+									Data Stack * Time</a></li>
+								<li><a href="nuts4Turnover.html">
+									Turnover ~ Independent</a></li>
+								<hr>
+								<li><a href="nuts4D55Stack.html">
+									Accom. Turnover Stack</a></li>
+								<li><a href="nuts4G552Model.html">
+									Accom. | Holiday & Short Stay Turnover Model</a></li>
+								<hr>
+								<li><a href="nuts4D47Model.html">
+									Retail Turnover Model</a></li>
+								<li><a href="nuts4D47Stack.html">
+									Retail Turnover Stack</a></li>
+								<li><a href="nuts4D47Footfall.html">
+									Retail Turnover Footfall Model</a></li>
+								<!--
+								<li><a href="#nuts4G472">
+									   Retail | Food, Beverages & Tobacco Turnover Model</a>
+									</li>
+								<li><a href="#nuts4G474">
+									   Retail | Info & Comm Equipment Turnover Model</a>
+									</li>
+								--->
+								<li><a href="nuts4G475Model.html">
+									Retail | Household Equipment Turnover Model</a></li>
+								<!--
+								<li><a href="#nuts4G476">
+									   Retail | Cultural & Recreational Turnover Model</a>
+									</li>
+								--->
+								<hr>
+								<li><a href="#nuts4GIS" class="proposed">
+								    Geographical Mappings</a></li>
+								<li><a href="nuts4Footfall.html">
+									Footfall</a></li>
+								<li><a href="nuts4Occupancy.html">
+									Occupancy (Service & Self-Catering)</a></li>
+								<li><a href="#nuts4Transport" class="proposed">
+									Transport</a></li>
+								<li><a href="#nuts4Twitter" class="proposed">
+									Twitter</a></li>
+								<li><a href="#nuts4Weather" class="proposed">
+								    Weather</a></li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a class="dropdown-toggle proposed" data-toggle="dropdown"
+								href="#">
+								Virtual Market
+								<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="#vmTraderModels" class="proposed">
+									Trader Models</a></li>
+								<li><a href="#vmTraderDashboard" class="proposed">
+									Trader Dashboard</a></li>
+								<li><a href="#vmWebsiteDashboard" class="proposed">
+									Website Dashboard</a></li>	
+							</ul>
+						</li>
+            		</ul>
+        		</li>
+        		
+            	<li><a href="mailto:omis.scarborough@gmail.com?subject=OMIS%20Contact" target="_blank" >Contact</a></li>
+            	
+            	<li><a href="data.html">Data</a></li>
+            	
+        		<li class="dropdown">
+          			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+          				Links
+          				<span class="caret"></span></a>
+          			<ul class="dropdown-menu">
+						<li class="dropdown">
+							<a class="dropdown-toggle proposed" data-toggle="dropdown"
+								href="#">
+								Data Sources
+								<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="#NOMIS" class="proposed">
+									NOMIS</a></li>
+								<li><a href="#ONS" class="proposed">
+									ONS</a></li>
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a class="dropdown-toggle" data-toggle="dropdown"
+								href="#">
+								Websites
+								<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="http://www.discoveryorkshirecoast.com"
+									target="_blank">
+									Discover Yorkshire Coast</a></li>
+								<li><a href="https://scarboroughmarkethall.wordpress.com"	
+									target="_blank">
+									Scarborough Market Hall</a></li>
+								<li><a href="https://www.scarboroughmarket.co.uk"
+									target="_blank">
+									Virtual Market</a></li>
+							</ul>
+						</li>
+            		</ul>
+        		</li>
+        		        		
+            	<li><a href="tc.html">T&C</a></li>
+		</div> 											 <!-- end of .navbarCollapse -->
+  	</div>
+</nav>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Loadable dataStack menu brought in via AJAX. Loaded into <div id="ajaxDataStack"></div>
+	
+------------------------------------------------------------------------------------------->
+<div class="container-fluid margin10" id="dataStack">
+  	<div class="page-header">
+    	<h3 id="title"></h3>
+  	</div>
+  	<div class="row">
+    	<div class="col-sm-3 ">
+			<form role="form" enctype="multipart/form-data">
+				<div class="well">
+					<fieldset>
+						<!--
+							"id=" not used as treating as a group via "name=" and don't
+							need specific for CSS styling or reference.
+						-->
+						<label>Data Stack</label>
+  						<div class="radio">
+							<label><input type="radio" name="dataStack"
+							value="businessCounts">Business Counts</label>
+  						</div>
+  						<div class="radio">
+							<label><input type="radio" name="dataStack"  checked="checked"
+							value="employment">Employment</label>
+  						</div>
+  						<div class="radio">
+							<label><input type="radio" name="dataStack"
+							value="incomeResident">Income Gross Weekly: Resident</label>
+  						</div>
+  						<div class="radio">
+							<label><input type="radio" name="dataStack"
+							value="incomeWorkplace">Income Gross Weekly: Workplace</label>
+  						</div>
+  						<div class="radio">
+							<label><input type="radio" name="dataStack"
+							value="population">Population</label>
+  						</div>
+  						<div class="radio">
+							<label><input type="radio" name="dataStack"
+							value="profession">Profession</label>
+  						</div>
+  						<div class="radio">
+							<label><input type="radio" name="dataStack"
+							value="qualifications">Qualifications</label>
+  						</div>
+  						<div class="radio">
+							<label><input type="radio" name="dataStack"
+							value="turnover">Turnover</label>
+  						</div>
+  						
+  						
+  						
+						<label>Options</label>
+						<div class="checkbox">
+							<label><input type="checkbox" name="options"
+							value="oneHundred">Provide 100% Stack</label>
+						</div>
+						<br>
+						
+						<button id="plotButton" type="button" class="btn btn-default">
+							Plot
+						</button>
+					</fieldset>
+				</div>	<!-- well -->
+			</form>
+    	</div>
+
+    	<div class="col-sm-9">
+			<div id="alertBox01"></div>
+    		<div id="outputGraphic01"></div>
+    	</div>
+	</div> 	<!-- row -->
+</div>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Loadable dataTime menu brought in via AJAX. Loaded into <div id="ajaxDataTime"></div>
+	
+------------------------------------------------------------------------------------------->
+<div class="container-fluid margin10" id="dataTime">
+  	<div class="page-header">
+    	<h3 id="title"></h3>
+  	</div>
+  	<div class="row">
+    	<div class="col-sm-3 ">
+			<form role="form" enctype="multipart/form-data">
+				<div class="well">
+					<fieldset>
+						<!--
+							"id=" not used as treating as a group via "name=" and don't
+							need specific for CSS styling or reference.
+						-->
+						<label>Business Count</label>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="numBus47s07">Retail</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="numBus55s07">Accomodation</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="numBus90s07">Creative Arts & Entertainment</label>
+  						</div>
+  						<div id="naBusinessCount">
+  							Not available
+  						</div>
+  						
+  						
+  						
+						<label>Economy £m</label>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="employCostsR">Employment Costs Retail</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="employCosts">Employment Costs Whole</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="GHDI">GHDI</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="GVA">GVA</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="aGVAR">GVA Approximate Retail</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="aGVA">GVA Approximate Whole</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="netCapExpndR">Net Capital Expenditure Retail</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="netCapExpnd">Net Capital Expenditure Whole</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="purchasesR">Purchases Retail</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="purchases">Purchases Whole</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="turnover55s07">Turnover Accomodation</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="turnover90s07">Turnover Arts</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="turnover47s07">Turnover Retail</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="turnover">Turnover Whole</label>
+  						</div>
+  						
+  						
+						<label>Employment *</label>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="femaleEmp">Female Employed</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="femaleSelfEmp">Female Self Employed</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="femaleUnemp">Female Unemployed</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="maleEmp">Male Employed</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="maleSelfEmp">Male Self Employed</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="maleUnemp">Male Unemployed</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="empSIC">SIC Industry Sections</label>
+  						</div>
+  						
+  						
+  						
+						<label>Income</label>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="femaleResGrossWeek">Female Resident Gross Week</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="femaleResHourExOT">Female Resident Hour Excl OT</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="femaleWorkGrossWeek">Female Workplace Gross Week</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="femaleWorkHourExOT">Female Workplace Hour Excl OT</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="maleResGrossWeek">Male Resident Gross Week</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="maleResHourExOT">Male Resident Hour Excl OT</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="maleWorkGrossWeek">Male Workplace Gross Week</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="maleWorkHourExOT">Male Workplace Hour Excl OT</label>
+  						</div>
+  						
+  				
+  					  						
+						<label>Population</label>
+						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="femalePop">Female</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="female16to64">Female 16 to 64</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="malePop">Male</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="male16to64">Male 16 to 64</label>
+  						</div>
+  						
+  	
+ 						
+						<label>Profession *</label>
+						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="manDir">
+							1 Managers, Directors & Senior Officials</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="profOcc">
+							2 Professional</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="assocProf">
+							3 Associate Professional & Technical</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="adminSec">
+							4 Administrative & Secretarial</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="skillTrad">
+							5 Skilled Trades</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="caringLeisure">
+							6 Caring, Leisure & Other Service</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="salesCust">
+							7 Sales & Customer Service</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="processPlant">
+							8 Process, Plant & Machine Operatives</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="elementary">
+							9 Elementary Occupations</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="retired">
+							Retired</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="dataQuarter"
+							value="student">
+							Student</label>
+  						</div>
+  						
+  						
+  						
+  						<label>Qualifications</label>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="qualNone">None</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="qualNVQ1">NVQ1 (<5 GCSEs)</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="qualNVQ2">NVQ2 (>=5 GCSEs)</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="qualNVQ3">NVQ3 (>=2 A-Levels)</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="qualNVQ4"> NVQ4 (HND or >=Degree)</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="data"
+							value="qualOther">Other</label>
+  						</div>
+  						
+  						
+  						
+						<label>Options</label>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="options"
+							value="quarter">Use quarterly data *</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="options" checked="checked"
+							value="overlay">Overlay plots</label>
+  						</div>
+						<br>
+						
+						<button id="plotButton" type="button" class="btn btn-default">
+							Plot
+						</button>
+					</fieldset>
+				</div>	<!-- well -->
+			</form>
+    	</div>
+
+    	<div class="col-sm-9">
+			<div id="alertBox01"></div>
+    		<div id="outputGraphic01"></div>
+    	</div>
+	</div> 	<!-- row -->
+</div>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Loadable turnover menu brought in via AJAX. Loaded into <div id="ajaxTurnover"></div>
+	
+------------------------------------------------------------------------------------------->
+<div class="container-fluid margin10" id="turnover">
+  	<div class="page-header">
+    	<h3 id="title"></h3>
+  	</div>
+  	<div class="row">
+    	<div class="col-sm-3 ">
+			<form role="form" enctype="multipart/form-data">
+				<div class="well">
+					<fieldset>
+						<!--
+							"id=" not used as treating as a group via "name=" and don't
+							need specific for CSS styling or reference.
+						-->
+						<label>Turnover £m</label>
+  						<div class="radio">
+							<label><input type="radio" name="turnover"
+							value="turnover55s07">Turnover Accomodation</label>
+  						</div>
+  						<div class="radio">
+							<label><input type="radio" name="turnover"
+							value="turnover90s07">Turnover Arts</label>
+  						</div>
+  						<div class="radio">
+							<label><input type="radio" name="turnover" checked="checked"
+							value="turnover47s07">Turnover Retail</label>
+  						</div>
+  						<div class="radio">
+							<label><input type="radio" name="turnover"
+							value="turnover">Turnover Whole</label>
+  						</div>
+  						<hr>
+						
+						
+						
+						<label>Business Count</label>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="numBus47s07">Retail</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="numBus55s07">Accomodation</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="numBus90s07">Creative Arts & Entertainment</label>
+  						</div>
+  						<div id="naBusinessCount">
+  							Not available
+  						</div>
+  						
+  						
+  						
+						<label>Economy £m</label>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="employCostsR">Employment Costs Retail</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="employCosts">Employment Costs Whole</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="GHDI">GHDI</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="GVA">GVA</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="aGVAR">GVA Approximate Retail</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="aGVA">GVA Approximate Whole</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="netCapExpndR">Net Capital Expenditure Retail</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="netCapExpnd">Net Capital Expenditure Whole</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="purchasesR">Purchases Retail</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="purchases">Purchases Whole</label>
+  						</div>
+  						<div id="naEconomy">
+  							Not available
+  						</div>
+  						
+  						
+						<label>Employment</label>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="femaleEmp">Female Employed</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="femaleSelfEmp">Female Self Employed</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="femaleUnemp">Female Unemployed</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="maleEmp">Male Employed</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="maleSelfEmp">Male Self Employed</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="maleUnemp">Male Unemployed</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="empSIC">SIC Industry Sections</label>
+  						</div>
+  						
+  						
+  						
+						<label>Income</label>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="femaleResGrossWeek">Female Resident Gross Week</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="femaleResHourExOT">Female Resident Hour Excl OT</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="femaleWorkGrossWeek">Female Workplace Gross Week</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="femaleWorkHourExOT">Female Workplace Hour Excl OT</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="maleResGrossWeek">Male Resident Gross Week</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="maleResHourExOT">Male Resident Hour Excl OT</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="maleWorkGrossWeek">Male Workplace Gross Week</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="maleWorkHourExOT">Male Workplace Hour Excl OT</label>
+  						</div>
+  						
+  				
+  					  						
+						<label>Population</label>
+						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="femalePop">Female</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="female16to64">Female 16 to 64</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="malePop">Male</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="male16to64">Male 16 to 64</label>
+  						</div>
+  						
+  	
+ 						
+						<label>Profession</label>
+						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="manDir">
+							1 Managers, Directors & Senior Officials</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="profOcc">
+							2 Professional</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="assocProf">
+							3 Associate Professional & Technical</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="adminSec">
+							4 Administrative & Secretarial</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="skillTrad">
+							5 Skilled Trades</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="caringLeisure">
+							6 Caring, Leisure & Other Service</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="salesCust">
+							7 Sales & Customer Service</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="processPlant">
+							8 Process, Plant & Machine Operatives</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="elementary">
+							9 Elementary Occupations</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="retired">
+							Retired</label>
+  						</div>
+						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="student">
+							Student</label>
+  						</div>
+  						
+  						
+  						
+  						<label>Qualifications</label>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="qualNone">None</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="qualNVQ1">NVQ1 (<5 GCSEs)</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="qualNVQ2">NVQ2 (>=5 GCSEs)</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="qualNVQ3">NVQ3 (>=2 A-Levels)</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="qualNVQ4"> NVQ4 (HND or >=Degree)</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="indVars"
+							value="qualOther">Other</label>
+  						</div>
+  						
+  						
+  						
+						<label>Options</label>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="options"
+							value="yAxisFrom0">Begin Y-Axis at 0</label>
+  						</div>
+						<br>
+						
+						<button id="plotButton" type="button" class="btn btn-default">
+							Plot
+						</button>
+					</fieldset>
+				</div>	<!-- well -->
+			</form>
+    	</div>
+
+    	<div class="col-sm-9">
+			<div id="alertBox01"></div>
+    		<div id="outputGraphic01"></div>
+    	</div>
+	</div> 	<!-- row -->
+</div>

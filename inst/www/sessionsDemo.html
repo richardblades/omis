@@ -1,0 +1,416 @@
+<!------------------------------------------------------------------------------------------
+ 	
+ 	s e s s i o n s D e m o . h t m l
+ 	
+------------------------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Environment
+ 	
+ 	Note, "<meta http-equiv...>" must be first element after <head> (including comments)
+ 	else some IE versions will ignore it. Edge mode tells IE to display content in the
+ 	highest mode available. Chrome=1 activates Googles Chrome Frame browser plugin to
+ 	seamlessley enhance IE6-IE9.
+ 	
+    OpenCPU's setting was as below
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />	
+ 	
+	To ensure proper rendering and touch zooming: 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	To disable mobile device zooming and replace with scrolling:
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,
+    user-scalable=no" />
+------------------------------------------------------------------------------------------->
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Identity
+ 	
+ 	Place favicon.ico and apple-touch-icon.png in the root directory 
+ 	
+------------------------------------------------------------------------------------------->
+    <title>omis</title>
+    <meta name="author" content="richard blades" />
+	<meta name="Online Market Intelligence System" content="" />
+
+
+
+<!------------------------------------------------------------------------------------------
+ 
+ 	CSS
+ 	
+------------------------------------------------------------------------------------------->
+	<link href="css/reset.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap-theme.css" rel="stylesheet" media="screen"/>
+	<link href="jquery-ui/jquery-ui.css" rel="stylesheet" media="screen"/>
+	<link href="css/omis.css" rel="stylesheet" media="screen"/>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	JavaScript
+	
+------------------------------------------------------------------------------------------->
+	<script src="js/prefixFree.min.js" type="application/javascript"></script>
+	<script src="jquery/jquery.min.js"></script>
+	<script src="opencpu/opencpu-0.4.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
+	<script src="jquery-ui/jquery-ui.js"></script>
+	<script src="jquery.easing.min.js"></script>
+	<script src="js/omis.js"></script>
+<!------------------------------------------------------------------------------------------
+ 	HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries.  
+------------------------------------------------------------------------------------------->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	
+	
+<script>
+$(document).ready(function() {
+//------------------------------------------------------------------------------------------
+// 	
+//	Initialise.
+// 	
+//------------------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------------------
+//	Set title 
+//------------------------------------------------------------------------------------------
+	$("#title").text("OpenCPU Sessions Demo");
+
+//------------------------------------------------------------------------------------------
+//	Establish session* as global variables so that R session data may be passed
+//------------------------------------------------------------------------------------------
+	var csvFilePrefix;
+	var csvPlot;
+	var session1;
+	var session2;
+	
+//------------------------------------------------------------------------------------------
+// 	Declare Alert Messages
+//------------------------------------------------------------------------------------------
+	alertBox("HTML5");
+	
+//------------------------------------------------------------------------------------------
+// 	Disable future, dependant options
+//------------------------------------------------------------------------------------------
+    $("#linkCSV").attr("disabled", "disabled")
+	$("#linkJSON").attr("disabled", "disabled")
+	$("#linkMarkdown").attr("disabled", "disabled")
+	$("#linkPrint").attr("disabled", "disabled")
+	$("#linkRData").attr("disabled", "disabled")
+	$("#linkTab").attr("disabled", "disabled")	
+	$("#saveButton").attr("disabled", "disabled")	
+
+
+
+//------------------------------------------------------------------------------------------
+// 	
+// 	Upload CSV file to OpenCPU server => session1
+//
+//------------------------------------------------------------------------------------------
+  	$("#uploadButton").on("click", function() {
+  	
+//------------------------------------------------------------------------------------------
+// 	Determine if additional data frame is to be stored alongside CSV file upload
+//------------------------------------------------------------------------------------------
+	 	var csvAddition;
+		if	(document.getElementById('csvAddition').checked) {
+    		csvAddition = "checked";
+		} else {
+    		csvAddition = "unchecked";
+		} 	
+		
+//------------------------------------------------------------------------------------------
+// 	Determine CSV filename
+//------------------------------------------------------------------------------------------
+		var csvFileName = $("#csvFileName")[0].files[0];
+		if	(!csvFileName) {
+			alertBox("input", null, "Please select a CSV file");
+		  	return;
+		}
+		
+//------------------------------------------------------------------------------------------
+// 	Extract prefix (file type removed) of file name from file path 
+//------------------------------------------------------------------------------------------
+		var filePath = document.getElementById('csvFileName').value;
+		if (filePath) {
+			var startIndex = (filePath.indexOf('\\') >= 0 ? filePath.lastIndexOf('\\') :
+				filePath.lastIndexOf('/'));
+			var fileName = filePath.substring(startIndex);
+			if (fileName.indexOf('\\') === 0 || fileName.indexOf('/') === 0) {
+				fileName = fileName.substring(1);
+			}
+			csvFilePrefix = fileName.substring(0, fileName.lastIndexOf('.'));
+//			alert(
+//				"filePath = " 	+ filePath + "\n" +
+//				"fileName = " 	+ fileName + "\n" +
+//				"csvFilePrefix = " + csvFilePrefix);			
+		}
+		
+//------------------------------------------------------------------------------------------
+// 	Determine if CSV file includes a header
+//------------------------------------------------------------------------------------------
+	 	var csvHeader;
+		if	(document.getElementById('csvHeader').checked) {
+    		csvHeader = "checked";
+		} else {
+    		csvHeader = "unchecked";
+		} 	
+		
+//------------------------------------------------------------------------------------------
+// 	Determine if CSV file is to be plotted
+//------------------------------------------------------------------------------------------
+		if	(document.getElementById('csvPlot').checked) {
+    		csvPlot = "checked";
+		} else {
+    		csvPlot = "unchecked";
+		} 	
+		
+//------------------------------------------------------------------------------------------
+// 	Disable the upload button during upload
+//------------------------------------------------------------------------------------------
+		$("#uploadButton").attr("disabled", "disabled");
+
+//------------------------------------------------------------------------------------------
+//	Perform the request
+//------------------------------------------------------------------------------------------
+		var req = ocpu.call(
+			"sessionsDemo1", 
+			{
+			csvAddition : csvAddition,
+			csvFileName	: csvFileName,
+			csvHeader	: csvHeader,
+			csvPlot		: csvPlot
+			},
+			function(session) {
+
+//------------------------------------------------------------------------------------------
+//	Assign the R session object to global variable for future reference
+//------------------------------------------------------------------------------------------
+				session1 = session;
+
+//------------------------------------------------------------------------------------------
+//	Examine session object
+//------------------------------------------------------------------------------------------
+//				alert("JSON.stringify(session1)\n" + JSON.stringify(session1, null, 4));
+				console.log(JSON.stringify(session1, null, 4));
+				console.log(session1);
+				
+//------------------------------------------------------------------------------------------
+//	Display R session properties
+//------------------------------------------------------------------------------------------
+//				$("#session1Key").text(session1.getKey());
+				$("#session1Loc").text(session1.getLoc());
+
+//------------------------------------------------------------------------------------------
+//	Display R session console
+//------------------------------------------------------------------------------------------
+				session1.getConsole(function(consoleText) {
+					$("#outputText01").text(consoleText);
+				});
+				
+//------------------------------------------------------------------------------------------
+//	If requested, display R session graphics
+//------------------------------------------------------------------------------------------
+				if	(csvPlot == "checked") {
+					loadGraphic(session1);
+				}
+        						 
+//------------------------------------------------------------------------------------------
+// 	Retrieve R session object 
+//------------------------------------------------------------------------------------------
+//				session1.getObject(function(data) {
+//					console.log(JSON.stringify(data, null, 4));
+//				});
+
+//------------------------------------------------------------------------------------------
+//	Enable export of R data frame (session1 object)
+//------------------------------------------------------------------------------------------
+				$("#linkCSV").attr("href", session1.getLoc() + "R/.val/csv");
+				$("#linkJSON").attr("href", session1.getLoc() + "R/.val/json");
+				$("#linkMarkdown").attr("href", session1.getLoc() + "R/.val/md");
+				$("#linkPrint").attr("href", session1.getLoc() + "R/.val/print");
+				$("#linkRData").attr("href", session1.getLoc() + "R/.val/rda");
+				$("#linkTab").attr("href", session1.getLoc() + "R/.val/tab");
+			}
+		);
+
+//------------------------------------------------------------------------------------------
+// 	If R returns an error, alert the error message
+//------------------------------------------------------------------------------------------
+		req.fail(function() {
+			alertBox("server", null, req.responseText);
+		});
+
+//------------------------------------------------------------------------------------------
+// 	Enable export CSV buttons upon successful CSV upload
+//------------------------------------------------------------------------------------------
+		req.always(function() {
+		  	$("#uploadButton").removeAttr("disabled")
+		  	$("#linkCSV").removeAttr("disabled")
+			$("#linkJSON").removeAttr("disabled")
+			$("#linkMarkdown").removeAttr("disabled")
+			$("#linkPrint").removeAttr("disabled")
+			$("#linkRData").removeAttr("disabled")
+			$("#linkTab").removeAttr("disabled")	
+			$("#saveButton").removeAttr("disabled")	
+		});
+  	});	//	$("#uploadButton")
+
+
+
+//------------------------------------------------------------------------------------------
+//
+// 	Save RData from first R session => session2
+//
+//------------------------------------------------------------------------------------------
+  	$("#saveButton").on("click", function() {
+		
+//------------------------------------------------------------------------------------------
+// 	Retrieve R session object generated from CSV upload in first R session
+//------------------------------------------------------------------------------------------
+//		session1.getObject(function(data) {
+//			console.log(JSON.stringify(data, null, 4));
+//  	});
+		var req = ocpu.call(
+			"sessionsDemo2",
+			{
+			csvFilePrefix 	: csvFilePrefix,
+			object 			: session1
+			},
+			function(session) {
+				session2 = session;
+				session2.getConsole(function(consoleText) {
+					$("#outputText01").text(consoleText);
+				});
+				$("#session2Loc").text(session2.getLoc());
+			}
+		);
+		req.fail(function() {
+			alertBox("server", null, req.responseText);
+		});  		
+  	}); 															//	$("#saveButton")
+
+
+  	
+});	//	$(document)
+</script>
+
+
+
+</head>
+<body>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Nav
+	
+	Common loadable <nav> brought in via AJAX.
+	
+------------------------------------------------------------------------------------------->
+<div id="ajaxNav"></div>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Page Content 
+	------------------------------------------------------------------------------------------->
+<div class="container-fluid margin10">
+
+  	<div class="page-header">
+    	<h3 id="title"></h3>
+  	</div>
+  	
+  	<div class="row margin0Left"> 										  <!-- Row 1 -->
+    	<div class="col-xs-5 col-md-4 well"> 
+			<form role="form" enctype="multipart/form-data">
+				<fieldset>
+					<legend>Download OMIS Sample</legend>
+					<a class="btn btn-default" role="button"
+						href="../data/sessionsDemo/csv">
+						<span class="glyphicon glyphicon-cloud-download"></span>
+						&nbsp;&nbsp;
+						Download
+					</a>
+					<br><br><br>
+					
+					<legend>Upload CSV File to OpenCPU Server</legend>
+					<div class="form-group">
+						<input class="btn btn-default btn-xs restrainButton" type="file"
+							id="csvFileName">
+						<div class="checkbox">
+							<label><input type="checkbox" id="csvHeader" checked="checked"
+							>CSV Headers</label>
+							&nbsp;&nbsp;
+							<label><input type="checkbox" id="csvPlot"
+							>CSV Plot</label>
+							&nbsp;&nbsp;
+							<label><input type="checkbox" id="csvAddition"
+							>Insert Additional Data Frame</label>
+						</div>
+					</div>
+					<button id="uploadButton" type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-open"></span>
+						<span class="glyphicon glyphicon-picture"></span>
+						&nbsp;&nbsp;
+						Upload
+					</button>
+					<span id="session1Loc" class="restrainLocation"></span>
+					<br><br><br>
+					
+					<legend>Save to OMIS</legend>
+					<button id="saveButton" type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-cloud-upload"></span>
+						&nbsp;&nbsp;
+ 						Save
+					</button>
+					<span id="session2Loc" class="restrainLocation"></span>
+					<br><br><br>
+					
+					<legend>Reformat this Upload for Export</legend>
+					<a class="btn btn-default btn-xs" role="button" 
+						id="linkCSV">CSV</a>
+					<a class="btn btn-default btn-xs" role="button" target="_blank"
+						id="linkJSON">JSON</a>
+					<a class="btn btn-default btn-xs" role="button" target="_blank"
+						id="linkMarkdown">Markdown</a>
+					<a class="btn btn-default btn-xs" role="button" target="_blank"
+						id="linkPrint">Print</a>
+					<a class="btn btn-default btn-xs" role="button"
+						id="linkRData">R Data</a>
+					<a class="btn btn-default btn-xs" role="button" target="_blank"
+						id="linkTab">Table</a>
+				</fieldset>
+			</form>
+		</div>
+				
+    	<div class="col-xs-7 col-md-8">
+			<div id="alertBox01"></div>
+    		<pre id="outputText01" class="pre-scrollable"></pre> 		   <!-- Text -->
+    		<div id="outputGraphic01"></div>						     <!-- Images -->
+    	</div>    
+  	</div>																  <!-- Row 1 -->  
+</div> 															   <!-- Page Content -->
+
+
+
+</body>
+</html>

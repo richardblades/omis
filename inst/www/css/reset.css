@@ -1,0 +1,30 @@
+/*------------------------------------------------------------------------------------------
+	
+	r e s e t . c s s														 				  
+  
+ 	Adopted CSS resets taken from normalise.css.
+	
+	Richard Blades 		Version 1.0		Friday 30th January 2015.
+	   
+------------------------------------------------------------------------------------------*/
+
+
+/*------------------------------------------------------------------------------------------
+	Multiple Resets											 				  
+------------------------------------------------------------------------------------------*/
+a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,caption,center,cite,code,dd,del,details,dfn,div,dl,dt,em,embed,fieldset,figcaption,figure,form,footer,header,hgroup,i,iframe,img,ins,kbd,html,h1,h2,h3,h4,h5,h6,label,legend,li,mark,menu,nav,object,ol,output,p,pre,q,ruby,s,samp,section,span,small,strike,strong,sub,sup,summary,table,tbody,td,tfoot,th,thead,time,tr,tt,u,ul,var,video {
+    background: transparent;
+	border: 0;
+	font: inherit; 
+	font-size: 100%;
+    margin: 0;
+    outline: 0;
+    padding: 0;
+    vertical-align: baseline;
+   	}
+article,aside,details,figcaption,figure,footer,header,hgroup,main,menu,nav,section,summary { 
+    display: block;	/* block display not defined for (any HTML5 element in IE8,9) (<details>,<summary> in IE10,11,Firefox) & (<main> in IE11) */   	
+	}
+audio,canvas,video { /* correct for IE8,9. Taken from learn.shayHowe.com */ 
+  	display: inline-block;
+	}	

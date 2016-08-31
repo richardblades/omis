@@ -1,0 +1,199 @@
+<!------------------------------------------------------------------------------------------
+ 	
+ 	t c . h t m l
+ 		
+------------------------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Environment
+ 	
+ 	Note, "<meta http-equiv...>" must be first element after <head> (including comments)
+ 	else some IE versions will ignore it. Edge mode tells IE to display content in the
+ 	highest mode available. Chrome=1 activates Googles Chrome Frame browser plugin to
+ 	seamlessley enhance IE6-IE9.
+ 	
+    OpenCPU's setting was as below
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />	
+ 	
+	To ensure proper rendering and touch zooming: 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	To disable mobile device zooming and replace with scrolling:
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,
+    user-scalable=no" />
+------------------------------------------------------------------------------------------->
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Identity
+ 	
+ 	Place favicon.ico and apple-touch-icon.png in the root directory 
+ 	
+------------------------------------------------------------------------------------------->
+    <title>omis</title>
+    <meta name="author" content="richard blades" />
+	<meta name="Online Market Intelligence System" content="" />
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	CSS
+ 	
+------------------------------------------------------------------------------------------->
+	<link href="css/reset.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap-theme.css" rel="stylesheet" media="screen"/>
+	<link href="jquery-ui/jquery-ui.css" rel="stylesheet" media="screen"/>
+	<link href="css/omis.css" rel="stylesheet" media="screen"/>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	JavaScript
+	
+------------------------------------------------------------------------------------------->
+	<script src="js/prefixFree.min.js" type="application/javascript"></script>
+	<script src="jquery/jquery.min.js"></script>
+	<script src="opencpu/opencpu-0.4.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
+	<script src="jquery-ui/jquery-ui.js"></script>
+	<script src="jquery.easing.min.js"></script>
+	<script src="js/omis.js"></script>
+<!------------------------------------------------------------------------------------------
+    HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
+------------------------------------------------------------------------------------------->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.../js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  
+  
+    
+<script>
+$(document).ready(function() {
+//------------------------------------------------------------------------------------------
+//
+//	Initialise
+//
+//------------------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------------------
+//	Set title
+//------------------------------------------------------------------------------------------
+	$("#title").text("Terms and Conditions");
+
+});																		  // $(document)
+</script>
+
+
+    
+</head>
+<body>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Nav
+	
+	Common loadable <nav> brought in via AJAX.
+	
+------------------------------------------------------------------------------------------->
+<div id="ajaxNav"></div>
+
+
+
+<!------------------------------------------------------------------------------------------
+
+	Page Content
+	
+------------------------------------------------------------------------------------------->
+<div class="container-fluid margin10">
+
+  	<div class="page-header">
+    	<h3 id="title"></h3>
+  	</div>
+	
+	<section class="container-fluid heightAuto bgOAC01">
+	
+		<article class="parallax widthAuto">
+		
+			<h1>In General</h1>
+			<p>Please read these terms and conditions carefully. If you do not agree to be bound by them, please do not use this site. These terms and conditions may be changed at any time without notice. OMIS has taken care to ensure that the information on www.omis-scarborough.uk is correct. However, no warranty, express or implied, is given as to its accuracy and OMIS does not accept any liability for error or omission. OMIS is not responsible for how the information is used, how it is interpreted or what reliance is placed on it.</p>		
+			<br>
+			
+			<h1>Cookies</h1>
+			<p>Session cookies are used by OMIS to control which functions are available to the user. Cookies are created at Login and deleted upon browser closure.</p>
+			<br>
+			
+    		<h1>Copyright</h1>
+    		<p>...</p>
+			<br>
+			
+    		<h1>Data Protection</h1>
+    		<p>...</p>
+			<br>
+			
+    		<h1>Data Sources</h1>
+    		<p>OMIS has used data from the following sources:</p>
+    		<p> - The Office for National Statistics and Nomis under the
+				<a class="whiteText" href=
+			"http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+				target="_blank">Open Government Licence.</a></p>    			
+    		<p> - Footfall data from
+    			<a class="whiteText" href="http://www.spring-board.infoSpringboard"
+    			target="_blank">Springboard.</a></p> 
+    		<p> - Occupancy and Tourism data from
+    			<a class="whiteText" href="http://www.yorkshire.com" target="_blank">
+    			Welcome to Yorkshire.</a></p> 
+			<br>
+			
+    		<h1>Intellectual Property Rights</h1>
+    		<p>...</p>
+			<br>
+			
+    		<h1>Links</h1>
+    		<p>This website contains links to and from other websites. OMIS does not endorse these websites and is not responsible for their content. OMIS cannot guarantee that these links will work or that pages it links to will be available.</p>
+			<br>
+			
+    		<h1>Privacy</h1>
+    		<p>Excluding your email address (requested at Login) OMIS does not collect any other information personal to you.</p>
+			<br>
+			
+    		<h1>Software Licenses</h1>
+    		<p>The OpenCPU software is released under Apache2 
+				<a class="whiteText" href="http://www.apache.org/licenses/LICENSE-2.0"
+    			target="_blank">license.</a></p> 
+    		<p>R is released under the GPL-2 & GPL-3 open source 
+				<a class="whiteText" href="https://www.r-project.org/Licenses/"
+    			target="_blank">licenses.</a></p> 
+		</article>
+		
+	</section>
+
+
+
+<!------------------------------------------------------------------------------------------
+	ScrollTop
+	Standard jQuery function.
+------------------------------------------------------------------------------------------->
+	<a id="scrolltop" title="Scroll to top">
+		<span class="glyphicon glyphicon-chevron-up"></span>
+	</a>
+   
+</div> 															   <!-- Page Content -->
+ 
+ 
+    
+</body>
+</html>

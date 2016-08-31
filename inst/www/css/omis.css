@@ -1,0 +1,351 @@
+/*------------------------------------------------------------------------------------------
+	
+	o m i s . c s s 	
+	
+	Items marked "???" should be removed once seen as superfluous.	
+	
+	Colour scheme employed:
+		Name		Hex			RGB				Comment
+		black		#000000		(000,000,000)	standard colour
+		gray		#808080		(128,128,128)	standard colour
+		n/a			#D9EDF7		(217,237,247)	Bootstrap 3.0 "light blue"
+		n/a			#B9DEF7		(185,222,240)	Bootstrap 3.0 "blue"
+		white		#FFFFFF		(255,255,255)	standard colour
+		
+	For comparison:
+		dodgerBlue	#1E90FF		(049,122,143)	standard colour
+		 
+														   	      
+------------------------------------------------------------------------------------------*/
+body {
+	padding-top: 70px;									/* allow for navbar-fixed-top */
+	position: relative;										  /* needed for scrollspy */
+}
+h1 {
+	font-size: 32px;
+}
+h3 {
+	font-size: 32px;
+	margin: -60px 0 0 0;   		  /* allow for narbar-fixed-top when using navbar <a> */
+}
+???input.form-control {
+  	width: 100% !important;
+}
+fieldset > label { 							/* Condense menus by overriding Bootstrap */
+    margin-bottom: 0px !important;
+    margin-top: 10px !important;
+}
+p {
+	font-size: 18px;
+	margin: 0px;
+	padding: 0px;
+}
+???td {
+	margin: 0 !important; 
+	padding: 0 !important;
+}
+#ajaxHeaders {
+	background: white;
+	border: 1px solid #ccc;
+  	border-radius: 5px;
+  	font-size: 85%;  
+  	min-height: 100px;
+}
+#ajaxSpinner {
+  	display: none;
+}
+#ajaxStatus {
+	background: white;
+	border: 1px solid #ccc;
+  	border-radius: 5px;
+  	font-size: 85%;
+}
+#ajaxText {
+	background: white;
+	border: 1px solid #ccc;
+  	border-radius: 5px;
+  	font-size: 85%;
+  	min-height: 350px;
+}
+???#fileCSV {
+  	width: 100%;
+}
+#outputGraphic01,
+#outputGraphic02,
+#outputGraphic03 {
+	background: white;
+	background-position: center center;
+	background-repeat: no-repeat;	
+	background-size: 100% 100%; 	
+	border: 1px solid #ccc;
+  	border-radius: 5px;
+  	height: 600px;
+	???min-height: 100px; 
+	???min-width: 100px;  
+	position: relative;
+  	width: 100%;
+}
+#outputText01,
+#outputText02,
+#outputText03 {
+	background: white;
+ 	border: 1px solid #ccc !important;
+  	border-radius: 5px !important;
+	height: 150px; 	/* was 100%; */
+	margin: 0 0 10px 0;
+  	width: 100%;
+}
+#scrolltop {
+	background: transparent;
+	bottom: 0;
+	color: gray;
+	font-size: 24px;
+	position: fixed;
+	right: 5%;
+}
+#scrolltop:hover {
+	background: transparent; 									  
+	color: rgb(185,222,240);								  /* Bootstrap 3.0 "blue" */
+} 
+.alignRight {
+	float: right;
+}
+.alphaLow {
+	background-color: rgba(0,0,0,0.5);
+	border-radius: 5px;
+	???font-size: 32px;
+	???height: auto;
+	???margin: 30px;
+	???padding: 20px;
+}
+.backgroundWhite {
+	background: white;
+}
+.bgNone {
+	background-color: white; 
+	background-position: center center;
+	background-repeat: no-repeat;	
+	background-size: 100% 100%; 	
+	border: 1px solid #ccc;
+  	border-radius: 5px;
+  	margin-bottom: 60px;
+  	padding: 0px;
+}
+.bgOAC01 {
+	background: url("../image/OAC01.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+  	background-size: cover;
+  	border-radius: 5px;
+  	margin-bottom: 60px;
+  	padding: 0px;
+}
+.bgOAC02 {
+	background: url("../image/OAC02.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+  	background-size: cover;
+  	border-radius: 5px;
+  	margin-bottom: 60px;
+  	padding: 0px;
+}
+.bgOAC03 {
+	background: url("../image/OAC03Edit.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+  	background-size: cover;
+  	border-radius: 5px;
+  	margin-bottom: 60px;
+  	padding: 0px;
+}
+.blackText {
+	color: rgba(0,0,0,0.8);
+}
+.center {
+    text-align: center;
+}
+.checkbox { 								/* Condense menus by overriding Bootstrap */
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+.clearBoth {
+    clear: both;
+}
+.copyright {
+	font-size: 18px;
+}
+.device-size {
+    margin: 0px;
+}
+.fromTo {
+	text-align: left; 
+	width: 50px;
+}
+.growthFactor {
+	display: inline-block;
+	font-weight: normal;
+	margin: 0; 
+  	max-width: none;
+  	width: auto;
+}
+.heightAuto {
+	height: auto;
+}
+.height0 {
+	height: 0 !important;
+	padding: 0 !important;
+}
+.height200 {
+  	height: 200px;
+}
+.height300 {
+  	height: 300px;
+}
+.height500 {
+  	height: 500px;
+}
+.height600 {
+  	height: 600px;
+}
+.highlight,
+.highlight:hover {
+	background: rgb(217,237,247) !important;
+	background: linear-gradient(rgb(217,237,247) 0%, rgb(185,222,240) 100%) !important;
+}
+.infoBlue {
+	background-color: rgb(185,222,240) !important;			  /* Bootstrap 3.0 "blue" */
+}
+.logos {
+	background-color: white; 			
+ 	height: auto;
+	margin: 0px;
+	padding: 0px;
+}
+.margin0L0R {
+	margin-left: 0px;
+	margin-right: 0px;
+}
+.margin10 {
+	margin: 10px;
+}
+.maxHeight600 {
+  	height: 600px;
+  	max-height: 600px;
+}
+/*------------------------------------------------------------------------------------------
+	Bootstrap "navbar-brand" default is 18px. This needs to tie in with "navbar-nav a"
+	hence it is defalted here to 14px and then bumped up to 18px for screens > 992px.
+------------------------------------------------------------------------------------------*/
+.navbar-brand { 
+	font-size: 14px;
+}
+@media (min-width: 992px) {
+	.navbar-brand { 
+		font-size: 18px;
+	}
+}
+.navbar-custom  {
+	-webkit-box-shadow: 0px 0px 15px rgba(0,0,0,1.0);
+	   -moz-box-shadow: 0px 0px 15px rgba(0,0,0,1.0);
+	        box-shadow: 0px 0px 15px rgba(0,0,0,1.0); 					    
+	opacity: 0.9;															 
+}
+.navbar-custom  {
+	-webkit-box-shadow: 0px 0px 15px rgba(0,0,0,1.0);
+	   -moz-box-shadow: 0px 0px 15px rgba(0,0,0,1.0);
+	        box-shadow: 0px 0px 15px rgba(0,0,0,1.0);
+	opacity: 0.9;
+}
+/*------------------------------------------------------------------------------------------
+	Bootstrap "navbar-nav a" default is 14px. This can be a little small. 20px is ideal but
+	can cut short secondary drop down menus on lower screen widths. Hence 18px used as a      
+   	compromise for screens > 992px.	
+------------------------------------------------------------------------------------------*/
+@media (min-width: 992px) {
+	.navbar-nav a { 
+		font-size: 18px; 
+	}
+}
+.opacity10 {
+	opacity: 1.0;
+}
+.parallax {
+	background-color: rgba(0,0,0,0.6); 						   /* Was rgba(0,0,0,0.5) */
+	border-radius: 5px;
+	color: rgba(255,255,255,1.0);						 /* Was rgba(255,255,255,0.9) */
+	font-size: 32px;
+	height: auto;
+	margin: 25px;
+	padding: 25px;
+}
+.progress{
+  	display: none;
+}
+.preventCollapse {
+    clear: both;
+}
+.proposed {
+	color: rgb(185,222,240) !important;		  				  /* Bootstrap 3.0 "blue" */
+}
+.radio { 									/* Condense menus by overriding Bootstrap */
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+.restrainHeader {
+	height: 20px !important;
+	overflow: hidden !important;
+	padding-left: 5px !important;
+    text-overflow: ellipsis !important; 
+}
+.restrainButton { 
+	overflow: hidden !important;
+	padding-left: 5px !important;
+	text-align: left !important;
+    text-overflow: ellipsis !important; 
+    width: 100% !important;
+}
+.restrainLocation {
+	float: right;
+	font-size: 12px;
+	line-height: 34px;
+}
+.right {
+	float: right;
+}
+.roundBorder {
+	border-radius: 3px !important; 
+}
+.table th, .table td { 
+    border: none !important; 
+}
+.???table input {
+	background: transparent !important;
+	border: 0 !important; 
+	border-radius: 0 !important; 
+	display: block !important;
+	line-height: 1 !important;
+	margin: 0 !important; 
+	padding: 5 !important; 
+	width: 100% !important; 
+}
+.transparent,
+.transparent:hover {
+	background: transparent !important;
+	color: rgba(0,0,0,0.0) !important;
+}
+.widthAuto {
+	width: auto;
+}
+.width300 {
+	width: 300px;
+}
+.width500 {
+	width: 500px;
+}
+.width600 {
+	width: 600px;
+}
+.width800 {
+	width: 800px;
+}
+.whiteText,
+.whiteText:hover {
+	color: rgba(255,255,255,0.9);
+}

@@ -1,0 +1,577 @@
+<!------------------------------------------------------------------------------------------
+ 	
+ 	n u t s 4 G 5 5 2 M o d e l . h t m l
+ 	
+ 	Common set of options are passed through to R via openCPU. Rationale being that its
+ 	so much easier to simpler to send all and ignore those you don't need.
+ 	
+------------------------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Environment
+ 	
+ 	Note, "<meta http-equiv...>" must be first element after <head> (including comments)
+ 	else some IE versions will ignore it. Edge mode tells IE to display content in the
+ 	highest mode available. Chrome=1 activates Googles Chrome Frame browser plugin to
+ 	seamlessley enhance IE6-IE9.
+ 	
+    OpenCPU's setting was as below
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />	
+ 	
+	To ensure proper rendering and touch zooming: 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	To disable mobile device zooming and replace with scrolling:
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,
+    user-scalable=no" />
+------------------------------------------------------------------------------------------->
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Identity
+ 	
+ 	Place favicon.ico and apple-touch-icon.png in the root directory 
+ 	
+------------------------------------------------------------------------------------------->
+    <title>omis</title>
+    <meta name="author" content="richard blades" />
+	<meta name="Online Market Intelligence System" content="" />
+
+
+
+<!------------------------------------------------------------------------------------------
+ 
+ 	CSS
+ 	
+------------------------------------------------------------------------------------------->
+	<link href="css/reset.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap-theme.css" rel="stylesheet" media="screen"/>
+	<link href="jquery-ui/jquery-ui.css" rel="stylesheet" media="screen"/>
+	<link href="css/omis.css" rel="stylesheet" media="screen"/>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	JavaScript
+	
+------------------------------------------------------------------------------------------->
+	<script src="js/prefixFree.min.js" type="application/javascript"></script>
+	<script src="jquery/jquery.min.js"></script>
+	<script src="opencpu/opencpu-0.4.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
+	<script src="jquery-ui/jquery-ui.js"></script>
+	<script src="jquery.easing.min.js"></script>
+	<script src="js/omis.js"></script>
+<!------------------------------------------------------------------------------------------
+ 	HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries.  
+------------------------------------------------------------------------------------------->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+	
+<script>
+$(document).ready(function() {
+//------------------------------------------------------------------------------------------
+// 	
+//	Initialise
+// 	
+//------------------------------------------------------------------------------------------
+  		alertBox("note", null, "'Bed Mean Occupancy' covers 'serviced' and 'self-catering'. It excludes 'hotels' and 'camping & recreational'.");
+  		
+//------------------------------------------------------------------------------------------
+//	Establish global session variables
+//------------------------------------------------------------------------------------------
+	var	actualFunction	= "nuts4G552ModelAct",
+		predictFunction = "nuts4G552ModelPrd",
+		depVar1 		= "turnover552s07",
+		depVar1Ttl		= "turnover £m",
+		geography 		= "nuts4",
+	 	indVar1 		= "bedMean",
+	 	indVar2 		= "malePop",
+	 	modelTo			= "2012",
+		predictTo		= "2020";
+		
+//------------------------------------------------------------------------------------------
+//	Set title 
+//------------------------------------------------------------------------------------------
+	$("#title").text("Accommodation | Holiday & Short Stay Turnover Model | Scarborough (LAD/NUTS-4)");
+
+//------------------------------------------------------------------------------------------
+//	Set table headers
+//------------------------------------------------------------------------------------------
+	$("#depVar1Hdr").text("Turnover £millions"); 
+	$("#indVar1Hdr").text("Bed Mean Occupancy %");
+	$("#indVar2Hdr").text("Male Population");
+
+
+
+//------------------------------------------------------------------------------------------
+// 	
+//	Provide table and graphic for actual data 
+// 	
+//------------------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------------------
+//	Load spinner to reassure user that processing is taking place
+//------------------------------------------------------------------------------------------
+	loadSpinner();
+	
+	var req = ocpu.call(
+		actualFunction,
+		{
+		depVar1 	: depVar1,
+		depVar1Ttl	: depVar1Ttl,
+		factor1		: "0",
+		factor2		: "0",
+		geography 	: geography,
+		indVar1 	: indVar1,
+		indVar2 	: indVar2,
+		inputData 	: "none",
+		modelTo		: modelTo,
+		options 	: "none",
+		predictTo	: predictTo
+		}, 
+		function(session1) {
+//------------------------------------------------------------------------------------------
+//	Load screen with graphic returned
+//------------------------------------------------------------------------------------------
+			loadGraphic(session1);
+			
+//------------------------------------------------------------------------------------------
+//	Load screen with table returned
+//
+//		Debug facilities:
+//  			alert("url: " + session1.getLoc());				   // OpenCPU object address
+// 			session1.getObject(function(table) {
+// 				console.log(JSON.stringify(table, null, 4)); 	  // Review entire table
+// 				$.each(table, function(index, value) {
+// 					console.log(JSON.stringify(table[index], null, 4));    // Review row
+// 				});
+// 			});
+//
+//		jQuery array processing:
+//			$.each(array, function(index, value) {
+//				alert(index + ": " + value);
+//			});
+//
+//		JavaScript array processing:
+//			var length = array.length;   
+//			for (var i = 0; i < length; i++) {
+//				alert(i + ": " + array[i]); 
+//			}
+//------------------------------------------------------------------------------------------
+			session1.getObject(function(table) {
+				$("tbody tr").each(function(i) {
+					if (table[i].year != "NA") {
+						$(this).find(".yearTd").val(table[i].year);
+					}
+					if (table[i].depVar1 != "NA") {
+						$(this).find(".depVar1Td").val(table[i].depVar1);
+					}
+					if (table[i].indVar1 == "NA") {
+					 	$(this).find(".indVar1Td").prop("disabled", false);
+					} else {
+						$(this).find(".indVar1Td").val(table[i].indVar1)
+						.prop("disabled", true);
+					}
+					if (table[i].indVar2 == "NA") {
+					 	$(this).find(".indVar2Td").prop("disabled", false);
+					} else {
+						$(this).find(".indVar2Td").val(table[i].indVar2)
+						.prop("disabled", true);
+					}
+				});
+			});
+		} 													  	   // function(session1)
+	);																	    // ocpu.call
+	req.fail(function(){
+ 		alertBox("server", null, req.responseText);
+	});
+
+
+
+//------------------------------------------------------------------------------------------
+//	
+//	Provide table and graphic for predicted data 
+//
+//------------------------------------------------------------------------------------------
+  	$("#predictButton").on("click", function(e) {
+  		e.preventDefault();
+  		
+//------------------------------------------------------------------------------------------
+// 	Disable the predictButton during plot
+//------------------------------------------------------------------------------------------
+		$("#predictButton").attr("disabled", "disabled");
+		
+//------------------------------------------------------------------------------------------
+// 	Determine which options have been been checked.
+//------------------------------------------------------------------------------------------
+		var	options = [];
+		$.each($("input[name='options']:checked"), function() {
+      		options.push($(this).val());
+      	});
+//		alertBox("options", null, options.join(", "));
+
+//------------------------------------------------------------------------------------------
+// 	Validate growth factor(s). 
+//	The isNumeric function not actually needed, but left for future reference. 
+//------------------------------------------------------------------------------------------
+		factor1 = $("#factor1").val();
+		factor2 = $("#factor2").val();
+//		function isNumeric(n) {
+//			return !isNaN(parseFloat(n)) && isFinite(n);
+//		}
+//		if (! isNumeric(factor1) || ! isNumeric(factor2) ) {
+//			alert("Growth factors must be an integer");
+//			prevent further calls
+//		}
+
+//------------------------------------------------------------------------------------------
+// 	Gather table input data
+//------------------------------------------------------------------------------------------
+//		parseFloat($("#???").text().replace(',', '.'));.replace(/,/g, '') 
+//		parseFloat('0,04'.replace(/,/, '.'))
+//		parseFloat($("#???").text().replace(/\./g,'').replace(',', '.'))
+		var inputData = [];
+		$("tr.predict").each(function(i) {
+			inputData[i] = {
+				indVar1 : parseFloat($(this).find(".indVar1Td").val().replace(/,/g,'')),
+				indVar2	: parseFloat($(this).find(".indVar2Td").val().replace(/,/g,''))
+			};
+		});
+// 		alertBox ("input", null, inputData.join(", "));
+
+//------------------------------------------------------------------------------------------
+//	Load spinner to reassure user that processing is taking place
+//------------------------------------------------------------------------------------------
+	loadSpinner();
+	
+//------------------------------------------------------------------------------------------
+//	OpenCPU ocpu.call request
+//------------------------------------------------------------------------------------------
+		var req = ocpu.call(
+			predictFunction,
+			{
+			depVar1 	: depVar1,
+			depVar1Ttl	: depVar1Ttl,
+			factor1		: factor1,
+			factor2		: factor2,
+			geography 	: geography,
+			indVar1 	: indVar1,
+			indVar2 	: indVar2,
+			inputData 	: inputData,
+			modelTo		: modelTo,
+			options 	: options,
+			predictTo	: predictTo
+			}, 
+			function(session2) {
+//------------------------------------------------------------------------------------------
+//	Facilitate debugging
+//------------------------------------------------------------------------------------------
+// 				alert("url: " + session2.getLoc());			   // OpenCPU object address
+
+//------------------------------------------------------------------------------------------
+//	Load screen with graphic returned
+//------------------------------------------------------------------------------------------
+				loadGraphic(session2);
+		
+//------------------------------------------------------------------------------------------
+//	Load screen with table returned
+//------------------------------------------------------------------------------------------
+				session2.getObject(function(table) {
+					$("tr.predict").each(function(i) {
+						$(this).find(".yearTd").val(table[i].year);
+						$(this).find(".depVar1Td").val(table[i].depVar1);
+						$(this).find(".depVar1TdChg").val(table[i].depVar1Chg);
+						$(this).find(".depVar1TdPct").val(table[i].depVar1Pct);
+						$(this).find(".indVar1Td").val(table[i].indVar1);
+						$(this).find(".indVar1TdChg").val(table[i].indVar1Chg);
+						$(this).find(".indVar1TdPct").val(table[i].indVar1Pct);
+						$(this).find(".indVar2Td").val(table[i].indVar2);
+						$(this).find(".indVar2TdChg").val(table[i].indVar2Chg);
+						$(this).find(".indVar2TdPct").val(table[i].indVar2Pct);
+					});
+				});
+			} 													   // function(session2)
+		);																	// ocpu.call
+		req.always(function() {
+			$("#predictButton").removeAttr("disabled");
+		});
+		req.fail(function(){
+ 			alertBox("server", null, req.responseText)
+		});
+
+	});	//	$("#predictButton")
+
+});	//	$(document)
+</script>
+
+
+
+</head>
+<body>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Nav
+	
+	Common loadable <nav> brought in via AJAX.
+	
+------------------------------------------------------------------------------------------->
+<div id="ajaxNav"></div>
+
+
+
+<!------------------------------------------------------------------------------------------
+
+	Page Content 
+	------------------------------------------------------------------------------------------->
+<div class="container-fluid margin10">
+  	<div class="page-header">
+    	<h3 id="title"></h3>
+  	</div>
+  	<div class="row">
+  	
+    	<div class="col-sm-3">
+			<form role="form" enctype="multipart/form-data">
+				<div class="well">
+					<fieldset>
+<!------------------------------------------------------------------------------------------
+  	"id=" not used as treating as a group via "name=" and don't need to be specific for CSS
+  	styling or reference.
+------------------------------------------------------------------------------------------->
+						<label>Options</label>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="options"
+							value="confidence">Add 95% confidence levels</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="options"
+							value="modelAttr">Provide model attributes</label>
+  						</div>
+  						<div class="checkbox">
+							<label><input type="checkbox" name="options"
+							value="nonlinear">Best fit non-linear curve</label>
+  						</div>
+  						<br>
+  						<div>
+							<label>Impose cumulative growth factors</label>
+						</div>
+  						<div>
+  							<select class="form-control growthFactor" id="factor1">
+								<option value="%">% (a)</option>
+								<option value="-5">-5</option>
+								<option value="-4">-4</option>
+								<option value="-3">-3</option>
+								<option value="-2">-2</option>
+								<option value="-1">-1</option>
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+							</select>
+  							<select class="form-control growthFactor" id="factor2">
+								<option value="%">% (b)</option>
+								<option value="-5">-5</option>
+								<option value="-4">-4</option>
+								<option value="-3">-3</option>
+								<option value="-2">-2</option>
+								<option value="-1">-1</option>
+								<option value="0">0</option>
+								<option value="1">1</option>
+								<option value="2">2</option>
+								<option value="3">3</option>
+								<option value="4">4</option>
+								<option value="5">5</option>
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option value="10">10</option>
+							</select>
+						</div>
+						<br>
+						<br>
+						<button id="predictButton" type="button" 
+							class="btn btn-default">Predict & plot
+						</button>
+						&nbsp;&nbsp;&nbsp;
+					</fieldset>
+				</div>													   <!-- Well -->
+			</form>
+    	</div>
+    	            								
+    	<div class="col-sm-9">
+			<div id="alertBox01"></div>
+    		<div id="outputGraphic01"></div>
+    	</div>
+    	
+    	<div class="col-xs-12">
+    		<br>
+			<form role="form" enctype="multipart/form-data">
+				<table class="table table-condensed table-responsive">
+					<thead>
+						<tr class="infoBlue">
+							<div class="col-xs-1 infoBlue restrainHeader">
+								Year
+								<th class="col-xs-1 height0 infoBlue"></th>
+							</div>
+							<div class="col-xs-5 infoBlue restrainHeader" id="depVar1Hdr">
+								<th class="col-xs-2 height0 infoBlue"></th>
+								<th class="col-xs-2 height0 infoBlue"></th>
+								<th class="col-xs-1 height0 infoBlue"></th>
+							</div>
+							<div class="col-xs-3 infoBlue restrainHeader" id="indVar1Hdr">
+								<th class="col-xs-1 height0 infoBlue"></th>
+								<th class="col-xs-1 height0 infoBlue"></th>
+								<th class="col-xs-1 height0 infoBlue"></th>
+							</div>
+							<div class="col-xs-3 infoBlue restrainHeader" id="indVar2Hdr">
+								<th class="col-xs-1 height0 infoBlue"></th>
+								<th class="col-xs-1 height0 infoBlue"></th>
+								<th class="col-xs-1 height0 infoBlue"></th>
+							</div>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="infoBlue latest">
+							<td><input class="form-control yearTd" disabled></td>
+							<td><input class="form-control depVar1Td" disabled></td>
+							<td>&Delta;</td>
+							<td>%</td>
+							<td><input class="form-control indVar1Td" disabled></td>
+							<td>&Delta;</td>
+							<td>% (a)</td>
+							<td><input class="form-control indVar2Td" disabled></td>
+							<td>&Delta;</td>
+							<td>% (b)</td>
+						</tr>
+						<tr class="predict">
+							<td><input class="form-control yearTd" disabled></td>
+							<td><input class="form-control depVar1Td" disabled></td>
+							<td><input class="form-control depVar1TdChg" disabled></td>
+							<td><input class="form-control depVar1TdPct" disabled></td>
+							<td><input class="form-control indVar1Td" input="text"></td>
+							<td><input class="form-control indVar1TdChg" disabled></td>
+							<td><input class="form-control indVar1TdPct" disabled></td>
+							<td><input class="form-control indVar2Td" input="text"></td>
+							<td><input class="form-control indVar2TdChg" disabled></td>
+							<td><input class="form-control indVar2TdPct" disabled></td>
+						</tr>
+						<tr class="predict">
+							<td><input class="form-control yearTd" disabled></td>
+							<td><input class="form-control depVar1Td" disabled></td>
+							<td><input class="form-control depVar1TdChg" disabled></td>
+							<td><input class="form-control depVar1TdPct" disabled></td>
+							<td><input class="form-control indVar1Td" input="text"></td>
+							<td><input class="form-control indVar1TdChg" disabled></td>
+							<td><input class="form-control indVar1TdPct" disabled></td>
+							<td><input class="form-control indVar2Td" input="text"></td>
+							<td><input class="form-control indVar2TdChg" disabled></td>
+							<td><input class="form-control indVar2TdPct" disabled></td>
+						</tr>
+						<tr class="predict">
+							<td><input class="form-control yearTd" disabled></td>
+							<td><input class="form-control depVar1Td" disabled></td>
+							<td><input class="form-control depVar1TdChg" disabled></td>
+							<td><input class="form-control depVar1TdPct" disabled></td>
+							<td><input class="form-control indVar1Td" input="text"></td>
+							<td><input class="form-control indVar1TdChg" disabled></td>
+							<td><input class="form-control indVar1TdPct" disabled></td>
+							<td><input class="form-control indVar2Td" input="text"></td>
+							<td><input class="form-control indVar2TdChg" disabled></td>
+							<td><input class="form-control indVar2TdPct" disabled></td>
+						</tr>
+						<tr class="predict">
+							<td><input class="form-control yearTd" disabled></td>
+							<td><input class="form-control depVar1Td" disabled></td>
+							<td><input class="form-control depVar1TdChg" disabled></td>
+							<td><input class="form-control depVar1TdPct" disabled></td>
+							<td><input class="form-control indVar1Td" input="text"></td>
+							<td><input class="form-control indVar1TdChg" disabled></td>
+							<td><input class="form-control indVar1TdPct" disabled></td>
+							<td><input class="form-control indVar2Td" input="text"></td>
+							<td><input class="form-control indVar2TdChg" disabled></td>
+							<td><input class="form-control indVar2TdPct" disabled></td>
+						</tr>
+						<tr class="predict">
+							<td><input class="form-control yearTd" disabled></td>
+							<td><input class="form-control depVar1Td" disabled></td>
+							<td><input class="form-control depVar1TdChg" disabled></td>
+							<td><input class="form-control depVar1TdPct" disabled></td>
+							<td><input class="form-control indVar1Td" input="text"></td>
+							<td><input class="form-control indVar1TdChg" disabled></td>
+							<td><input class="form-control indVar1TdPct" disabled></td>
+							<td><input class="form-control indVar2Td" input="text"></td>
+							<td><input class="form-control indVar2TdChg" disabled></td>
+							<td><input class="form-control indVar2TdPct" disabled></td>
+						</tr>
+						<tr class="predict">
+							<td><input class="form-control yearTd" disabled></td>
+							<td><input class="form-control depVar1Td" disabled></td>
+							<td><input class="form-control depVar1TdChg" disabled></td>
+							<td><input class="form-control depVar1TdPct" disabled></td>
+							<td><input class="form-control indVar1Td" input="text"></td>
+							<td><input class="form-control indVar1TdChg" disabled></td>
+							<td><input class="form-control indVar1TdPct" disabled></td>
+							<td><input class="form-control indVar2Td" input="text"></td>
+							<td><input class="form-control indVar2TdChg" disabled></td>
+							<td><input class="form-control indVar2TdPct" disabled></td>
+						</tr>
+						<tr class="predict">
+							<td><input class="form-control yearTd" disabled></td>
+							<td><input class="form-control depVar1Td" disabled></td>
+							<td><input class="form-control depVar1TdChg" disabled></td>
+							<td><input class="form-control depVar1TdPct" disabled></td>
+							<td><input class="form-control indVar1Td" input="text"></td>
+							<td><input class="form-control indVar1TdChg" disabled></td>
+							<td><input class="form-control indVar1TdPct" disabled></td>
+							<td><input class="form-control indVar2Td" input="text"></td>
+							<td><input class="form-control indVar2TdChg" disabled></td>
+							<td><input class="form-control indVar2TdPct" disabled></td>
+						</tr>
+						<tr class="predict">
+							<td><input class="form-control yearTd" disabled></td>
+							<td><input class="form-control depVar1Td" disabled></td>
+							<td><input class="form-control depVar1TdChg" disabled></td>
+							<td><input class="form-control depVar1TdPct" disabled></td>
+							<td><input class="form-control indVar1Td" input="text"></td>
+							<td><input class="form-control indVar1TdChg" disabled></td>
+							<td><input class="form-control indVar1TdPct" disabled></td>
+							<td><input class="form-control indVar2Td" input="text"></td>
+							<td><input class="form-control indVar2TdChg" disabled></td>
+							<td><input class="form-control indVar2TdPct" disabled></td>
+						</tr>
+					</tbody>
+				</table>
+			</form>
+    	</div>
+	</div> 																	<!-- Row -->
+</div> 															   <!-- Page Content -->
+
+
+
+</body>
+</html>

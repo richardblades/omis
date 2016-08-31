@@ -1,0 +1,3 @@
+load("/Users/510147/R/omis/data/nuts1.rda")
+load("/Users/510147/R/omis/data/nuts4.rds")
+load("/Users/510147/R/omis/data/nuts4.rds")

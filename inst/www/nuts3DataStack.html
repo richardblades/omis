@@ -1,0 +1,128 @@
+<!------------------------------------------------------------------------------------------
+ 	
+ 	n u t s 3 D a t a S t a c k . h t m l
+	
+------------------------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Environment
+ 	
+ 	Note, "<meta http-equiv...>" must be first element after <head> (including comments)
+ 	else some IE versions will ignore it. Edge mode tells IE to display content in the
+ 	highest mode available. Chrome=1 activates Googles Chrome Frame browser plugin to
+ 	seamlessley enhance IE6-IE9.
+ 	
+    OpenCPU's setting was as below
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />	
+ 	
+	To ensure proper rendering and touch zooming: 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	To disable mobile device zooming and replace with scrolling:
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,
+    user-scalable=no" />
+------------------------------------------------------------------------------------------->
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Identity
+ 	
+ 	Place favicon.ico and apple-touch-icon.png in the root directory 
+ 	
+------------------------------------------------------------------------------------------->
+    <title>omis</title>
+    <meta name="author" content="richard blades" />
+	<meta name="Online Market Intelligence System" content="" />
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	CSS
+ 	
+------------------------------------------------------------------------------------------->
+	<link href="css/reset.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap-theme.css" rel="stylesheet" media="screen"/>
+	<link href="jquery-ui/jquery-ui.css" rel="stylesheet" media="screen"/>
+	<link href="css/omis.css" rel="stylesheet" media="screen"/>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	JavaScript
+	
+------------------------------------------------------------------------------------------->
+	<script src="js/prefixFree.min.js" type="application/javascript"></script>
+	<script src="jquery/jquery.min.js"></script>
+	<script src="opencpu/opencpu-0.4.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
+	<script src="jquery-ui/jquery-ui.js"></script>
+	<script src="jquery.easing.min.js"></script>
+	<script src="js/omis.js"></script>
+<!------------------------------------------------------------------------------------------
+ 	HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries.  
+------------------------------------------------------------------------------------------->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	
+	
+<script type="text/javascript">
+$(document).ready(function() { 
+//------------------------------------------------------------------------------------------
+//	
+//	AJAX load dataStack menu and update via dataStack script. 
+//	Note, because we're loading only a selective part of the ajax.html file, jQuery AJAX
+//  would ignore any attached/proceeding script. To circumnavigate this the script is
+//	engaged via callback. 
+//
+//------------------------------------------------------------------------------------------
+	$('#ajaxDataStack').load('ajax.html #dataStack', function () {
+		dataStack("nuts3",
+			"Data Stack * Time | North Yorkshire County Council (County/NUTS-3)");
+		console.log("dataStack function complete");
+	}); 
+});
+</script>
+
+
+
+</head>
+<body>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Nav
+	Common loadable <nav> brought in via AJAX.
+	
+------------------------------------------------------------------------------------------->
+<div id="ajaxNav"></div>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Page Content 
+	Loadable dataStack menu brought in via AJAX.
+	
+------------------------------------------------------------------------------------------->
+<div id="ajaxDataStack"></div>
+
+
+
+</body>
+</html>

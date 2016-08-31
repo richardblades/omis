@@ -1,0 +1,371 @@
+<!------------------------------------------------------------------------------------------
+
+ 	u s e r s . h t m l
+
+------------------------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Environment
+ 	
+ 	Note, "<meta http-equiv...>" must be first element after <head> (including comments)
+ 	else some IE versions will ignore it. Edge mode tells IE to display content in the
+ 	highest mode available. Chrome=1 activates Googles Chrome Frame browser plugin to
+ 	seamlessley enhance IE6-IE9.
+ 	
+    OpenCPU's setting was as below
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />	
+ 	
+	To ensure proper rendering and touch zooming: 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	To disable mobile device zooming and replace with scrolling:
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,
+    user-scalable=no" />
+------------------------------------------------------------------------------------------->
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Identity
+ 	
+ 	Place favicon.ico and apple-touch-icon.png in the root directory 
+ 	
+------------------------------------------------------------------------------------------->
+    <title>omis</title>
+    <meta name="author" content="richard blades" />
+	<meta name="Online Market Intelligence System" content="" />
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	CSS
+	
+------------------------------------------------------------------------------------------->
+	<link href="css/reset.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap-theme.css" rel="stylesheet" media="screen"/>
+	<link href="jquery-ui/jquery-ui.css" rel="stylesheet" media="screen"/>
+	<link href="css/omis.css" rel="stylesheet" media="screen"/>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	JavaScript
+	
+------------------------------------------------------------------------------------------->
+	<script src="js/prefixFree.min.js" type="application/javascript"></script>
+	<script src="jquery/jquery.min.js"></script>
+	<script src="opencpu/opencpu-0.4.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
+	<script src="jquery-ui/jquery-ui.js"></script>
+	<script src="jquery.easing.min.js"></script>
+	<script src="js/omis.js"></script>
+<!------------------------------------------------------------------------------------------
+ 	HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries.  
+------------------------------------------------------------------------------------------->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+
+<script>
+$(document).ready(function() {
+//------------------------------------------------------------------------------------------
+//
+//	Initialise
+//
+//------------------------------------------------------------------------------------------
+	$("#confirm").prop("checked", false);
+	
+//------------------------------------------------------------------------------------------
+//	Set title
+//------------------------------------------------------------------------------------------
+	$("#title").text("User Accounts");
+
+//------------------------------------------------------------------------------------------
+//	Establish global session variables
+//------------------------------------------------------------------------------------------
+		
+		
+		
+//------------------------------------------------------------------------------------------
+//	
+//	Build table to hold current view of users.rda.
+//
+//------------------------------------------------------------------------------------------
+	var req = ocpu.call(
+		"usersCurrent",
+		{
+		},
+		function(session1) {
+			session1.getObject(function(usersCurrent) {
+// 	 			console.log(JSON.stringify(usersCurrent, null, 4));
+
+//------------------------------------------------------------------------------------------
+//	Construct <tr> per row returned. userType of pending is disabled as this value may only
+//	be set at account registration.
+//------------------------------------------------------------------------------------------
+    			for (i = 0; i < usersCurrent.length; i++) { 
+    				$(	
+    			"<tr class='user center'>" +
+				"<td><input class='form-control email' disabled></td>" +
+				"<td><input type='radio' name='userType" + i + "' value='admin'  ></td>" +
+				"<td><input type='radio' name='userType" + i + "' value='base'   ></td>" +
+				"<td><input type='radio' name='userType" + i + "' value='denied' ></td>" +
+				"<td><input type='radio' name='userType" + i + 
+													  "' disabled value='pending'></td>" +
+				"</tr>")
+					.appendTo("tbody");
+				}
+				
+//------------------------------------------------------------------------------------------
+//	Populate newly formed table with contents of users.rda returned via session1 object. 
+//------------------------------------------------------------------------------------------
+				$("tr.user").each(function(i) {
+					$(this).find(".email").val(usersCurrent[i].email);
+					if 			(usersCurrent[i].userType === "admin") {
+						$(this).find("input[value='admin']").prop("checked", true);
+					} else if 	(usersCurrent[i].userType === "base") {
+						$(this).find("input[value='base']").prop("checked", true);
+					} else if 	(usersCurrent[i].userType === "denied") {
+						$(this).find("input[value='denied']").prop("checked", true);
+					} else if 	(usersCurrent[i].userType === "pending") {
+						$(this).find("input[value='pending']").prop("checked", true);
+					} else {
+						alertBox("note", "alertBox01", "Failure to assign User " +
+							usersCurrent[i].userType);
+					}
+				}); 
+				
+//------------------------------------------------------------------------------------------
+//	Add pagination to the newly formed table.
+//  (1) Create a custom pagination event "pageEvent" for the table. Upon triggering, it will
+//		hide all rows before revealing those within the relevant page slice.
+//	(2)	Generate pagination buttons, attaching a click event to each.
+//	(3)	jQuery’s event.data used to store the current page number.
+//------------------------------------------------------------------------------------------
+				$('table').each(function() {
+					var currentPage = 0;
+					var rowsPerPage = 10;
+					var $table 		= $(this);
+					var numRows 	= $table.find('tbody tr').length;
+					var numPages 	= Math.ceil(numRows / rowsPerPage);
+	
+					$table.on('pageEvent', function() {
+						$table.find('tbody tr')
+							.hide()
+							.slice(currentPage * rowsPerPage, (currentPage+1) * rowsPerPage)
+							.show();
+					});
+	
+					for (var page = 0; page < numPages; page++) {
+						$('<button type="button" class="btn btn-default"></button>')
+							.text(page + 1)
+							.on('click', {newPage: page},
+							function(event) {
+								currentPage = event.data['newPage'];
+								$table.trigger('pageEvent');
+								$(this).addClass('active').siblings().removeClass('active');
+							}).appendTo('#pageButtons');
+					}
+					
+					$table.trigger('pageEvent');					
+				});
+								
+			}); 													  // function(users)
+		}														   // function(session1)
+	);																		// ocpu.call
+		
+	req.always(function() {
+//			???
+	});
+
+	req.done(function() {
+		alertBox("note", "alertBox01", "Current view");
+	});
+
+//------------------------------------------------------------------------------------------
+// 	If R returns an error, alert the error message
+//------------------------------------------------------------------------------------------
+	req.fail(function() {
+		alertBox("server", "alertBox01", req.responseText);
+	});
+
+
+
+//------------------------------------------------------------------------------------------
+//
+// 	Process updateButton request.
+//	By passing the entire table, it effectively updates all amended rows, regardless of
+//	which page they sit on.
+//
+//------------------------------------------------------------------------------------------
+	$("#updateButton").click(function(event) {
+ 		event.preventDefault();
+
+//------------------------------------------------------------------------------------------
+// Clear away previous alert messages
+//------------------------------------------------------------------------------------------
+        $("#alertBox01 .alert").remove();
+
+//------------------------------------------------------------------------------------------
+// 	Ensure user confirms update prior to actioning.
+//------------------------------------------------------------------------------------------
+		if ($("#confirm").prop("checked")) {
+		  	$("#nextButton").attr("disabled", "disabled");
+			$("#previousButton").attr("disabled", "disabled");
+		  	$("#updateButton").attr("disabled", "disabled");
+		} else {
+			alertBox("note", "alertBox01", "Please confirm Update");
+			return;
+		}
+
+//------------------------------------------------------------------------------------------
+// 	Capture updates and pass back to R so that it may update the /extdata/users.rda table.
+//------------------------------------------------------------------------------------------
+		var usersUpdates = [];
+		$("tr.user").each(function(i) {
+			usersUpdates[i] = {
+				email 	 : $(this).find(".email").val(),
+				userType : $(this).find("input[name='userType" + i + "']:checked").val()
+			}
+        });				
+// 	 	console.log(JSON.stringify(usersUpdates, null, 4));
+
+//------------------------------------------------------------------------------------------
+// 	Perform the request
+//------------------------------------------------------------------------------------------
+		var req = ocpu.call(
+			"usersUpdate",
+			{
+ 			usersUpdates : usersUpdates
+			}
+		);
+
+		req.always(function() {
+		  	$("#confirm").prop("checked", false);
+		  	$("#nextButton").removeAttr("disabled")
+		  	$("#previousButton").removeAttr("disabled")
+		  	$("#updateButton").removeAttr("disabled")
+		});
+
+		req.done(function() {
+			alertBox("note", "alertBox01", "User accounts have been updated. Affected users have been notified via email.");
+		});
+
+//------------------------------------------------------------------------------------------
+// 	If R returns an error, alert the error message
+//------------------------------------------------------------------------------------------
+		req.fail(function() {
+			alertBox("server", "alertBox01", req.responseText);
+		});
+
+    }); 															     // updateButton
+    
+    
+});																		  // $(document)
+</script>
+
+
+
+</head>
+<body>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Nav
+	
+	Common loadable <nav> brought in via AJAX.
+	
+------------------------------------------------------------------------------------------->
+<div id="ajaxNav"></div>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Page Content
+	
+------------------------------------------------------------------------------------------->
+<div class="container-fluid margin10">
+
+  	<div class="page-header">
+    	<h3 id="title"></h3>
+  	</div>
+  	
+  	<div class="row">
+		<div class="col-xs-8 well">
+
+			<form role="form" enctype="multipart/form-data">
+			
+				<table class="table table-condensed table-responsive">
+					<thead>
+						<tr class="heading">
+							<th class="col-xs-5">User</th>
+							<th class="col-xs-1 center">Admin</th>
+							<th class="col-xs-1 center">Base</th>
+							<th class="col-xs-1 center">Denied</th>
+							<th class="col-xs-1 center">Pending</th>
+						</tr>
+					</thead>
+					<tbody>
+<!------------------------------------------------------------------------------------------
+	Table contents added via Ajax within JavaScript above.
+------------------------------------------------------------------------------------------->
+					</tbody>
+				</table>
+				
+				<button id="updateButton" type="button" class="btn btn-default">
+					<span class="glyphicon glyphicon-ok"></span>
+					&nbsp;&nbsp;
+					Update 
+				</button>
+				&nbsp; 
+				<input type="checkbox" id="confirm"> &nbsp;Confirm
+						
+				<div class="btn-group right" id="pageButtons"></div>	
+				
+<!------------------------------------------------------------------------------------------
+	Following block could not be handled by IE11 under Windows. Kept for future reference.
+--------------------------------------------------------------------------------------------
+				<div class="btn-toolbar">
+					<div class="btn-group">
+						<button type="button" class="btn btn-default">
+							Confirm &nbsp;
+							<input type="checkbox" id="confirm">
+						</button>
+						<button id="updateButton" type="button" class="btn btn-default">
+							<span class="glyphicon glyphicon-ok"></span>
+							&nbsp;&nbsp;
+							Update 
+						</button> 
+					</div>	
+					<div class="btn-group" id="pageButtons"></div>	
+				</div>
+------------------------------------------------------------------------------------------->
+			
+			</form>
+		</div> 															   <!-- Well -->
+	
+		<div class="col-xs-4">
+			<div id="alertBox01"></div>
+		</div>
+		
+	</div> 																	<!-- Row -->
+</div> 															   <!-- Page Content -->
+
+</body>
+</html>

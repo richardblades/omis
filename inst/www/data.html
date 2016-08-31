@@ -1,0 +1,318 @@
+<!------------------------------------------------------------------------------------------
+ 	
+ 	d a t a . h t m l
+ 	
+------------------------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Environment
+ 	
+ 	Note, "<meta http-equiv...>" must be first element after <head> (including comments)
+ 	else some IE versions will ignore it. Edge mode tells IE to display content in the
+ 	highest mode available. Chrome=1 activates Googles Chrome Frame browser plugin to
+ 	seamlessley enhance IE6-IE9.
+ 	
+    OpenCPU's setting was as below
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />	
+ 	
+	To ensure proper rendering and touch zooming: 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	To disable mobile device zooming and replace with scrolling:
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,
+    user-scalable=no" />
+------------------------------------------------------------------------------------------->
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Identity
+ 	
+ 	Place favicon.ico and apple-touch-icon.png in the root directory 
+ 	
+------------------------------------------------------------------------------------------->
+    <title>omis</title>
+    <meta name="author" content="richard blades" />
+	<meta name="Online Market Intelligence System" content="" />
+
+
+
+<!------------------------------------------------------------------------------------------
+ 
+ 	CSS
+ 	
+------------------------------------------------------------------------------------------->
+	<link href="css/reset.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap-theme.css" rel="stylesheet" media="screen"/>
+	<link href="jquery-ui/jquery-ui.css" rel="stylesheet" media="screen"/>
+	<link href="css/omis.css" rel="stylesheet" media="screen"/>
+
+
+
+<!------------------------------------------------------------------------------------------
+
+	JavaScript
+	
+------------------------------------------------------------------------------------------->
+	<script src="js/prefixFree.min.js" type="application/javascript"></script>
+	<script src="jquery/jquery.min.js"></script>
+	<script src="opencpu/opencpu-0.4.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
+	<script src="jquery-ui/jquery-ui.js"></script>
+	<script src="jquery.easing.min.js"></script>
+	<script src="js/omis.js"></script>
+<!------------------------------------------------------------------------------------------
+ 	HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries.  
+------------------------------------------------------------------------------------------->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	
+	
+<script>
+$(document).ready(function() {
+//------------------------------------------------------------------------------------------
+// 	
+//	Initialise 
+//
+//------------------------------------------------------------------------------------------
+	
+//------------------------------------------------------------------------------------------
+//	Set title 
+//------------------------------------------------------------------------------------------
+	$("#title").text("Data");
+
+//------------------------------------------------------------------------------------------
+//	Initial messages 
+//------------------------------------------------------------------------------------------
+	alertBox("HTML5");
+	
+
+
+//------------------------------------------------------------------------------------------
+//
+// 	Process Examine / Export OMIS Database 
+//
+//------------------------------------------------------------------------------------------
+	var omisURL	= "/ocpu/library/omis/";
+//	var omisURL	= "../library/"; 				 // ??? Something overiding this in API?
+	
+	
+	
+//------------------------------------------------------------------------------------------
+//
+// 	Examine OMIS data via AJAX (jqXHR jQuery XMLHttpRequest). 
+//
+//------------------------------------------------------------------------------------------
+	$("#examineButton").click(function(e) {
+  		e.preventDefault();
+		
+		var dataFormat 	= $("#dataFormat").val();
+		var omisData	= $("#omisData").val();
+		var requestURL;
+		
+		$("#ajaxText").empty();
+        $("#alertBox01 .alert").remove(); 		   // Clear away previous alert messages
+        
+  		if (omisData == "data/" && dataFormat != "") {
+  			alertBox("directory", "alertBox01");
+			return;
+  		} else {
+  			requestURL = omisURL + omisData + dataFormat; 
+
+  		}
+  		
+		if (dataFormat == "rda") {  
+  			alertBox("RData", "alertBox01");
+			return;
+		}
+		
+  		ajaxRequest 			= {};
+		ajaxRequest.data		= {};
+  		ajaxRequest.type 		= "GET"; 
+  		ajaxRequest.url 		= requestURL;
+  		ajaxRequest.complete 	= function(jqXHR) {
+			if 			(jqXHR.status == 0) {
+  				alertBox("HTTP0", "alertBox01");
+			}
+			$("#ajaxText").text(jqXHR.responseText);
+		}
+
+		if (jQuery.isEmptyObject(ajaxRequest.data)) {
+			ajaxRequest.contentType = 'application/x-www-form-urlencoded';
+		}
+//		alert(JSON.stringify(ajaxRequest, null, 4));
+
+  		$('#ajaxSpinner').show();
+		
+		var req = $.ajax(ajaxRequest).always(function(){
+ 			$('#ajaxSpinner').hide();
+		});	
+    });																    // examineButton  
+    
+
+
+//------------------------------------------------------------------------------------------
+//
+// 	Export OMIS data 
+//
+//	The following combination also works but only when "event.preventDefault()" has been
+//	removed. The consequence of the latter is that a "return" invokes the default "href".
+//	Note, the setting of "href" is best achieved via .prop rather than ".attr".
+//
+//		$("#exportButton").attr('target', target); 	  	  
+//		$("#exportButton").prop("href", requestURL);
+//
+//	Better still is the use of "$(location)" as it can live alongside 
+//	"event.preventDefault()". The issue is I haven't managed to alter the "target" setting
+//	prior to despatch.
+//
+//		$(location).attr('href', requestURL).attr('target', target);
+//
+//	Hence, pure JavaScript won the day:
+//
+//		window.open(requestURL, target);
+//
+//------------------------------------------------------------------------------------------
+	$("#exportButton").click(function(event) {
+ 		event.preventDefault(); 					
+
+		var dataFormat 	= $("#dataFormat").val();
+		var omisData	= $("#omisData").val();
+		var requestURL;
+		var target;
+		
+		$("#ajaxText").empty();
+        $("#alertBox01 .alert").remove(); 		   // Clear away previous alert messages
+        
+  		if (omisData == "data/" && dataFormat != "") {
+  			alertBox("directory", "alertBox01");
+			return; 	// Needs preventDefault to ensure href isn't actioned by default 
+  		} else {
+  			requestURL = omisURL + omisData + dataFormat;
+  		}
+  		
+		if (dataFormat == "csv" || dataFormat == "rda" || dataFormat == "tab") {  
+			target = "_self";
+		} else { 
+			target = "_blank";
+		} 
+		
+		window.open(requestURL, target);
+    
+    }); 																 // exportButton  
+  	
+});																		  // $(document)
+</script>
+
+
+
+</head>
+<body>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Nav
+	Common loadable <nav> brought in via AJAX.
+	
+------------------------------------------------------------------------------------------->
+<div id="ajaxNav"></div>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Page Content
+	
+------------------------------------------------------------------------------------------->
+<div class="container-fluid margin10">
+
+  	<div class="page-header">
+    	<h3 id="title"></h3>
+  	</div>
+  	    	
+  	<div class="row well margin0L0R"> 								  <!-- Row start -->
+		<div class="col-xs-5 col-md-4 well backgroundWhite">   	   	
+			<form>
+				<fieldset>
+					<legend>Examine & Export OMIS Database</legend>
+					<select class="form-control" id="omisData">
+						<option value="data/" selected="selected">
+							OMIS Directory</option>
+						<hr>
+						<option value="data/nuts1QuarterEmp/">
+							NUTS-1 Quarter Employment</option>
+						<option value="data/nuts1QuarterProf/">
+							NUTS-1 Quarter Professions</option>
+						<option value="data/nuts1QuarterSIC/">
+							NUTS-1 Quarter SIC Workforce</option>
+						<option value="data/nuts1Year/">
+							NUTS-1 Year</option>
+						<hr>
+						<option value="data/nuts3Quarter/">
+							NUTS-3 Quarter</option>
+						<option value="data/nuts3Year/">
+							NUTS-3 Year</option>
+						<hr>
+						<option value="data/nuts4HourFootfall/">
+							NUTS-4 Hour Footfall</option>
+						<option value="data/nuts4MonthOccupancy/">
+							NUTS-4 Month Occupancy</option>
+						<option value="data/nuts4Quarter/">
+							NUTS-4 Quarter</option>
+						<option value="data/nuts4Year/">
+							NUTS-4 Year</option>
+						<hr>
+						<option value="data/sessionsDemo/">
+							Sessions Demo (Example Download)</option>
+					</select>
+					<br>
+					<select class="form-control" id="dataFormat">
+						<option value="csv">CSV</option>
+						<option value="json">JSON</option>
+						<option value="md">Markdown</option>
+						<option value="" selected="selected">Print</option>
+						<option value="rda">R Data</option>
+						<option value="tab">Table</option>
+					</select>
+					<br>
+					<button id="examineButton" type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-folder-open"></span>
+						&nbsp;&nbsp;
+						Examine
+					</button>
+					&nbsp;&nbsp;
+					<a class="btn btn-default" role="button" target="_blank"
+						id="exportButton" href="../data/">
+						<span class="glyphicon glyphicon-cloud-download"></span>
+						&nbsp;&nbsp;
+						Export
+					</a>
+					<img src="spinner.gif" id="ajaxSpinner" class="alignRight"/>
+				</fieldset>
+			</form>	
+		</div>
+		
+		<div class="col-xs-7 col-md-8">
+			<div id="alertBox01"></div>
+			<pre id="ajaxText" class="pre-scrollable maxHeight600"></pre>			
+		</div>
+  	</div>															    <!-- Row end -->   	 	
+</div>  														   <!-- Page Content -->
+
+
+
+</body>
+</html>

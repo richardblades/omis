@@ -1,0 +1,744 @@
+<!------------------------------------------------------------------------------------------
+
+ 	l o g i n . h t m l
+ 	
+ 	Users account data held in extdata/users.rda
+		email:			:	Users's email address
+  		passwordAttempts	:	Number of contiguous failed login attempts
+  		password		:	Held under MD5 encryption.
+		userType		
+			admin		:	Access includes Admin menu.
+			base		:	Access excludes Admin menu.
+			denied		:	Request for access denied.
+			pending		:	Request for access pending.
+			
+	To simplify coding, the function within login.R expects a full set of parameters no
+	matter which request is made.
+		email		:
+		password	:
+		passwordNew	:
+		request
+			forgot	: 	User has fogotten password - email reset.
+			login	:	Process login request.
+			register:	Process OMIS registration request.
+			update	:	Update user's password.
+		
+	login.R returns the following findings table, populated as necessary. 
+		emailExists			:	Boolean
+		passwordAttempts	:	Integer.
+		passwordMatch		:	Boolean
+		requestSuccessful	:	Boolean
+		userType			:	As above.
+
+------------------------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Environment
+ 	
+ 	Note, "<meta http-equiv...>" must be first element after <head> (including comments)
+ 	else some IE versions will ignore it. Edge mode tells IE to display content in the
+ 	highest mode available. Chrome=1 activates Googles Chrome Frame browser plugin to
+ 	seamlessley enhance IE6-IE9.
+ 	
+    OpenCPU's setting was as below
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />	
+ 	
+	To ensure proper rendering and touch zooming: 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	To disable mobile device zooming and replace with scrolling:
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,
+    user-scalable=no" />
+------------------------------------------------------------------------------------------->
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Identity
+ 	
+ 	Place favicon.ico and apple-touch-icon.png in the root directory 
+ 	
+------------------------------------------------------------------------------------------->
+    <title>omis</title>
+    <meta name="author" content="richard blades" />
+	<meta name="Online Market Intelligence System" content="" />
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	CSS
+	
+------------------------------------------------------------------------------------------->
+	<link href="css/reset.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap-theme.css" rel="stylesheet" media="screen"/>
+	<link href="jquery-ui/jquery-ui.css" rel="stylesheet" media="screen"/>
+	<link href="css/omis.css" rel="stylesheet" media="screen"/>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	JavaScript
+	
+------------------------------------------------------------------------------------------->
+	<script src="js/prefixFree.min.js" type="application/javascript"></script>
+	<script src="jquery/jquery.min.js"></script>
+	<script src="opencpu/opencpu-0.4.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
+	<script src="jquery-ui/jquery-ui.js"></script>
+	<script src="jquery.easing.min.js"></script>
+	<script src="js/omis.js"></script>
+<!------------------------------------------------------------------------------------------
+ 	HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries.  
+------------------------------------------------------------------------------------------->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+
+<script>
+$(document).ready(function() {
+//------------------------------------------------------------------------------------------
+//
+//	Initialise
+//
+//------------------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------------------
+//	Establish global session variables
+//------------------------------------------------------------------------------------------
+ 	var	email		= "",
+		password 	= "",
+		passwordNew	= "",
+		request		= ""
+
+//------------------------------------------------------------------------------------------
+//	Set title
+//------------------------------------------------------------------------------------------
+	$("#title").text("Login");
+
+
+
+//------------------------------------------------------------------------------------------
+//
+// 	Process Forgotten Password request
+//
+//------------------------------------------------------------------------------------------
+	$("#forgotButton").click(function(event) {
+ 		event.preventDefault();
+
+//------------------------------------------------------------------------------------------
+// Clear away previous alert messages
+//------------------------------------------------------------------------------------------
+        $("#alertBox01 .alert").remove();
+
+//------------------------------------------------------------------------------------------
+// 	Validate email address
+//------------------------------------------------------------------------------------------
+		email = $("#email").val().toLowerCase();
+		var emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
+		if (! emailFormat.test(email)) {
+			alertBox("input", "alertBox01", "Invalid email format");
+			return;
+		}
+	
+//------------------------------------------------------------------------------------------
+// 	Disable buttons prior to registration request
+//------------------------------------------------------------------------------------------
+		$("#forgotButton").attr("disabled", "disabled");
+		$("#loginButton").attr("disabled", "disabled");
+		$("#registerButton").attr("disabled", "disabled");
+		$("#updateButton").attr("disabled", "disabled");
+
+//------------------------------------------------------------------------------------------
+// 	Perform the request
+//------------------------------------------------------------------------------------------
+		var req = ocpu.call(
+			"login",
+			{
+ 			email		: email,
+			password 	: "",
+			passwordNew	: "",
+			request		: "forgot"
+			},
+			function(session1) {
+//------------------------------------------------------------------------------------------
+//	Process findings returned as a table.
+//------------------------------------------------------------------------------------------
+				session1.getObject(function(table) {
+	 				console.log(JSON.stringify(table, null, 4));
+					if (table[0].emailExists == true) {
+						alertBox("note", "alertBox01", "Your password has been reset. Please refer to email.");
+					} else {
+						alertBox("error", "alertBox01", "Email address not recognised.");
+					}
+				});
+			} 												  	   // function(session1)
+		);
+
+		req.always(function() {
+			$("#forgotButton").removeAttr("disabled");
+			$("#loginButton").removeAttr("disabled");
+			$("#registerButton").removeAttr("disabled");
+			$("#updateButton").removeAttr("disabled");
+			$("#password").val("");
+			$("#passwordVerify").val("")
+			$("#passwordNew").val("")
+			$("#passwordNewVerify").val("")
+		});
+
+		req.done(function() {
+//			???
+		});
+
+//------------------------------------------------------------------------------------------
+// 	If R returns an error, alert the error message
+//------------------------------------------------------------------------------------------
+		req.fail(function() {
+			alertBox("server", "alertBox01", req.responseText);
+		});
+
+    }); 															     // forgotButton
+
+
+
+//------------------------------------------------------------------------------------------
+//
+// 	Process Login request
+//
+//	Assuming Login will be the most frequent request, then a keyboard enter will be taken as
+//	a Login.
+//
+//	Direct OMIS navigation via cookie. 
+//
+// 	if 	operating under localhost 
+//		then use relative path load via http
+//		else use absolute path load under https.
+//
+//	window.location.replace() used to remove history thereby preventing user from 
+//	returning via back command.
+//
+//	alert("href= " 		+ window.location.href);
+//	alert("protocol= " 	+ window.location.protocol);
+//	alert("port= " 		+ window.location.port);
+//	alert("host= " 		+ window.location.host);
+// 	alert("hostname= " 	+ window.location.hostname);
+//	alert("pathname= " 	+ window.location.pathname);
+//	alert("hash= " 		+ window.location.hash);
+//
+//------------------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------------------
+// 	Trigger #loginButton event upon keyboard enter.
+//------------------------------------------------------------------------------------------
+	$(document).keypress(function(e) {
+    	if  (e.which == 13) {
+        	$("#loginButton").click(); 
+    	}
+	});	
+
+	$("#loginButton").click(function(event) {
+ 		event.preventDefault();
+
+//------------------------------------------------------------------------------------------
+// 	Clear away previous alert messages
+//------------------------------------------------------------------------------------------
+        $("#alertBox01 .alert").remove();
+
+//------------------------------------------------------------------------------------------
+// 	Validate email address
+//------------------------------------------------------------------------------------------
+		email = $("#email").val().toLowerCase();
+		var emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
+		if (! emailFormat.test(email)) {
+			alertBox("input", "alertBox01", "Invalid email format");
+			return;
+		}
+
+//------------------------------------------------------------------------------------------
+// 	Validate password
+//------------------------------------------------------------------------------------------
+		password = $("#password").val();
+		if (password.length === 0) {
+			alertBox("input", "alertBox01", "Please enter your password");
+			return;
+		}
+
+//------------------------------------------------------------------------------------------
+// 	Ensure user accepts OMIS cookies prior to login request
+//------------------------------------------------------------------------------------------
+		if ($("#cookies").prop('checked')) {
+			$("#forgotButton").attr("disabled", "disabled");
+			$("#loginButton").attr("disabled", "disabled");
+			$("#registerButton").attr("disabled", "disabled");
+			$("#updateButton").attr("disabled", "disabled");
+		} else {
+			alertBox("cookies");
+			return;
+		}
+
+//------------------------------------------------------------------------------------------
+// 	Perform the request
+//------------------------------------------------------------------------------------------
+		var req = ocpu.call(
+			"login",
+			{
+ 			email		: email,
+			password 	: password,
+			passwordNew	: "",
+			request		: "login"
+			},
+//------------------------------------------------------------------------------------------
+//	Process findings returned as a table.
+//------------------------------------------------------------------------------------------
+			function(session1) {
+				session1.getObject(function(table) {
+	 				console.log(JSON.stringify(table, null, 4));
+
+					if (table[0].emailExists == true) {
+					
+						if (table[0].passwordMatch == true) {
+//------------------------------------------------------------------------------------------
+//	Establish session cookie based on userType and runtime environment. Such cookies are
+//	automatically deleted upon browser close. Note, if by chance, a previous instance exists
+//	then it is overwritten by the new.
+//------------------------------------------------------------------------------------------
+//							var remove = "userType=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+//							document.cookie = remove;
+							var cookie;
+							if (window.location.hostname == 'localhost') {
+ 							   	cookie = "userType=" + table[0].userType;
+ 							} else {
+ 							 	cookie = "userType=" + table[0].userType + "; secure";
+							}
+							document.cookie = cookie;
+// 							alert("userType = " + document.cookie.substring(9));
+							if (window.location.hostname == 'localhost') {
+								window.location.replace("index.html");	
+							} else {
+								window.location.replace(
+								"https://www.omis-scarborough.uk/ocpu/library/omis/www/");
+							}
+							
+						} else {
+							if (table[0].passwordAttempts >= 3) {
+								alertBox("error", "alertBox01", "You are only permitted 3 password attempts. Password has been reset. Please refer to email.");
+							} else {
+								alertBox("error", "alertBox01", "Password incorrect.");
+							}
+						}
+						
+					} else {
+						alertBox("error", "alertBox01", "Email address not recognised.");
+					}
+				});
+			} 												  	   // function(session1)
+		);
+
+		req.always(function() {
+			$("#forgotButton").removeAttr("disabled");
+			$("#loginButton").removeAttr("disabled");
+			$("#registerButton").removeAttr("disabled");
+			$("#updateButton").removeAttr("disabled");
+			$("#password").val("");
+			$("#passwordVerify").val("")
+			$("#passwordNew").val("")
+			$("#passwordNewVerify").val("")
+
+		});
+
+		req.done(function() {
+//			???
+		});
+
+//------------------------------------------------------------------------------------------
+// 	If R returns an error, alert the error message
+//------------------------------------------------------------------------------------------
+		req.fail(function() {
+			alertBox("server", "alertBox01", req.responseText);
+		});
+
+    }); 															      // loginButton
+
+
+
+//------------------------------------------------------------------------------------------
+//
+// 	Process Registration request
+//
+//------------------------------------------------------------------------------------------
+	$("#registerButton").click(function(event) {
+ 		event.preventDefault();
+
+//------------------------------------------------------------------------------------------
+// Clear away previous alert messages
+//------------------------------------------------------------------------------------------
+        $("#alertBox01 .alert").remove();
+
+//------------------------------------------------------------------------------------------
+// 	Validate email address
+//------------------------------------------------------------------------------------------
+		email = $("#email").val().toLowerCase();
+		var emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
+		if (! emailFormat.test(email)) {
+			alertBox("input", "alertBox01", "Invalid email format");
+			return;
+		}
+
+//------------------------------------------------------------------------------------------
+// 	Validate password
+//------------------------------------------------------------------------------------------
+		password = $("#password").val();
+		if (password.length === 0) {
+			alertBox("input", "alertBox01", "Please enter your password");
+			return;
+		}
+
+//------------------------------------------------------------------------------------------
+// 	Verify password
+//------------------------------------------------------------------------------------------
+		passwordVerify = $("#passwordVerify").val();
+		if (passwordVerify.length === 0) {
+			alertBox("input", "alertBox01", "Please verify your password");
+			return;
+		}
+		if (password != passwordVerify) {
+			alertBox("input", "alertBox01", "Please ensure your password entries match");
+			return;
+		}
+		
+//------------------------------------------------------------------------------------------
+// 	Disable buttons prior to registration request
+//------------------------------------------------------------------------------------------
+			$("#forgotButton").attr("disabled", "disabled");
+			$("#loginButton").attr("disabled", "disabled");
+			$("#registerButton").attr("disabled", "disabled");
+			$("#updateButton").attr("disabled", "disabled");
+
+//------------------------------------------------------------------------------------------
+// 	Perform the request
+//------------------------------------------------------------------------------------------
+		var req = ocpu.call(
+			"login",
+			{
+ 			email		: email,
+			password 	: password,
+			passwordNew	: "",
+			request		: "register"
+			},
+			function(session1) {
+				session1.getObject(function(table) {
+	 				console.log(JSON.stringify(table, null, 4));
+					if (table[0].emailExists == false) {
+						alertBox("note", "alertBox01", "Thank you for your OMIS registration request. You will be notified of the outcome via email");
+					} else {
+						alertBox("error", "alertBox01",
+							"Email address already registered.");
+					}
+				});
+			} 												  	   // function(session1)
+		);
+
+		req.always(function() {
+			$("#forgotButton").removeAttr("disabled");
+			$("#loginButton").removeAttr("disabled");
+			$("#registerButton").removeAttr("disabled");
+			$("#updateButton").removeAttr("disabled");
+			$("#password").val("");
+			$("#passwordVerify").val("")
+			$("#passwordNew").val("")
+			$("#passwordNewVerify").val("")
+
+		});
+
+		req.done(function() {
+//			???
+		});
+
+//------------------------------------------------------------------------------------------
+// 	If R returns an error, alert the error message
+//------------------------------------------------------------------------------------------
+		req.fail(function() {
+			alertBox("server", "alertBox01", req.responseText);
+		});
+
+    }); 															   // registerButton
+    
+    
+    
+//------------------------------------------------------------------------------------------
+//
+// 	Process Update Password request
+//
+//------------------------------------------------------------------------------------------
+	$("#updateButton").click(function(event) {
+ 		event.preventDefault();
+
+//------------------------------------------------------------------------------------------
+// Clear away previous alert messages
+//------------------------------------------------------------------------------------------
+        $("#alertBox01 .alert").remove();
+
+//------------------------------------------------------------------------------------------
+// 	Validate email address
+//------------------------------------------------------------------------------------------
+		email = $("#email").val().toLowerCase();
+		var emailFormat = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/;
+		if (! emailFormat.test(email)) {
+			alertBox("input", "alertBox01", "Invalid email format");
+			return;
+		}
+
+//------------------------------------------------------------------------------------------
+// 	Validate current password
+//------------------------------------------------------------------------------------------
+		password = $("#password").val();
+		if (password.length === 0) {
+			alertBox("input", "alertBox01", "Please enter your password");
+			return;
+		}
+
+//------------------------------------------------------------------------------------------
+// 	Validate new password
+//------------------------------------------------------------------------------------------
+		passwordNew = $("#passwordNew").val();
+		if (passwordNew.length === 0) {
+			alertBox("input", "alertBox01", "Please enter your NEW password");
+			return;
+		}
+
+//------------------------------------------------------------------------------------------
+// 	Verify new password
+//------------------------------------------------------------------------------------------
+		passwordNewVerify = $("#passwordNewVerify").val();
+		if (passwordNewVerify.length === 0) {
+			alertBox("input", "alertBox01", "Please verify your NEW password");
+			return;
+		}
+		if (passwordNew != passwordNewVerify) {
+			alertBox("input", "alertBox01",
+				"Please ensure your NEW password entries match");
+			return;
+		}
+		
+//------------------------------------------------------------------------------------------
+// 	Disable buttons prior to registration request
+//------------------------------------------------------------------------------------------
+			$("#forgotButton").attr("disabled", "disabled");
+			$("#loginButton").attr("disabled", "disabled");
+			$("#registerButton").attr("disabled", "disabled");
+			$("#updateButton").attr("disabled", "disabled");
+
+//------------------------------------------------------------------------------------------
+// 	Perform the request
+//------------------------------------------------------------------------------------------
+		var req = ocpu.call(
+			"login",
+			{
+ 			email		: email,
+			password 	: password,
+			passwordNew	: passwordNew,
+			request		: "update"
+			},
+			function(session1) {
+				session1.getObject(function(table) {
+	 				console.log(JSON.stringify(table, null, 4));
+					if (table[0].requestSuccessful == true) {
+						alertBox("note", "alertBox01", "Your password has been updated");
+					} else {
+						if (table[0].emailExists == false) {
+							alertBox("error", "alertBox01", "Email address not recognised");
+						}
+						if (table[0].passwordMatch == false) {
+							alertBox("error", "alertBox01", "Password incorrect");
+						}
+						if (table[0].passwordAttempts >= 3 &&
+							table[0].emailExists == true) {
+							alertBox("error", "alertBox01", "You are only permitted 3 password attempts. Password has been reset. Please refer to email.");
+						}
+					}
+				});
+			} 												  	   // function(session1)
+		);
+
+		req.always(function() {
+			$("#forgotButton").removeAttr("disabled");
+			$("#loginButton").removeAttr("disabled");
+			$("#registerButton").removeAttr("disabled");
+			$("#updateButton").removeAttr("disabled");
+			$("#password").val("");
+			$("#passwordVerify").val("")
+			$("#passwordNew").val("")
+			$("#passwordNewVerify").val("")
+		});
+
+		req.done(function() {
+//			???
+		});
+
+//------------------------------------------------------------------------------------------
+// 	If R returns an error, alert the error message
+//------------------------------------------------------------------------------------------
+		req.fail(function() {
+			alertBox("server", "alertBox01", req.responseText);
+		});
+
+    }); 																 // updateButton
+});																		  // $(document)
+</script>
+
+
+
+</head>
+<body>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Nav
+	
+------------------------------------------------------------------------------------------->
+<nav class="navbar navbar-inverse navbar-fixed-top navbar-custom" role="navigation">
+ 	<div class="container-fluid">
+      	<a class="navbar-brand">OMIS</a>
+  	</div>
+</nav>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Page Content
+	
+------------------------------------------------------------------------------------------->
+<div class="container-fluid margin10">
+
+  	<div class="page-header">
+    	<h3 id="title"></h3>
+  	</div>
+
+  	<div class="row well margin0L0R"> <!-- Row 1 -->
+    	<div class="col-xs-8 col-md-7 well backgroundWhite">
+
+			<form role="form" enctype="multipart/form-data">
+				<fieldset>
+					<div class="input-group">
+  						<span class="input-group-addon highlight"><span>1</span></span>
+  						<input type="text" class="form-control" id="email"
+  							placeholder="Enter your@email.address">
+					</div>
+					<br>
+					
+					<div class="input-group">
+  						<span class="input-group-addon highlight"><span>2</span></span>
+  						<input type="password" class="form-control" id="password"
+  						placeholder="Enter your password">
+					</div>
+
+					<div class="input-group">
+  						<span class="input-group-addon"><span>3</span></span>
+  						<input type="password" class="form-control" id="passwordVerify"
+  						placeholder="Verify your password">
+					</div>
+					<br>
+					
+					<div class="input-group">
+  						<span class="input-group-addon"><span>4</span></span>
+  						<input type="password" class="form-control" id="passwordNew"
+  						placeholder="Enter your NEW password">
+					</div>
+					
+					<div class="input-group">
+  						<span class="input-group-addon"><span>5</span></span>
+  						<input type="password" class="form-control" id="passwordNewVerify"
+  						placeholder="Verify your NEW password">
+					</div>
+					<hr>
+					
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-default">1</button>
+						<button type="button" class="btn btn-default transparent">
+																	  2</button>
+						<button type="button" class="btn btn-default transparent">
+																	  3</button>
+						<button type="button" class="btn btn-default transparent">
+																	  4</button>
+						<button type="button" class="btn btn-default transparent">
+																	  5</button>
+						<button type="button" class="btn btn-default" id="forgotButton">
+							Password Forgotten
+						</button>
+					</div>
+					<br><br>
+					
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-default highlight">1</button>
+						<button type="button" class="btn btn-default highlight">2</button>
+						<button type="button" class="btn btn-default transparent">
+														   			  3</button>
+						<button type="button" class="btn btn-default transparent">
+																	  4</button>
+						<button type="button" class="btn btn-default transparent">
+																	  5</button>
+						<button type="button" 
+							class="btn btn-default highlight" id="loginButton" >
+							Login 
+						</button>
+					</div>
+					&nbsp;
+					<input type="checkbox" id="cookies" checked="checked">
+						I accept OMIS cookies
+					<br><br>
+																			
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-default">1</button>
+						<button type="button" class="btn btn-default">2</button>
+						<button type="button" class="btn btn-default">3</button>
+						<button type="button" class="btn btn-default transparent">
+														   			  4</button>
+						<button type="button" class="btn btn-default transparent">
+																	  5</button>
+						<button type="button" class="btn btn-default" id="registerButton">
+							Register for OMIS
+						</button>
+					</div>
+					<br><br>
+					
+					<div class="btn-group" role="group">
+						<button type="button" class="btn btn-default">1</button>
+						<button type="button" class="btn btn-default">2</button>
+						<button type="button" class="btn btn-default transparent">
+																	  3</button>
+						<button type="button" class="btn btn-default">4</button>
+						<button type="button" class="btn btn-default">5</button>
+						<button type="button" class="btn btn-default" id="updateButton">
+							Password Update
+						</button>
+					</div>
+					
+				</fieldset>
+			</form>
+		</div>
+
+    	<div class="col-xs-4 col-md-5">
+			<div id="alertBox01"></div>
+    	</div>
+
+  	</div>																  <!-- Row 1 -->
+  	
+</div> 															   <!-- Page Content -->
+
+</body>
+</html>

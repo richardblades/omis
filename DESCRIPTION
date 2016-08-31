@@ -1,0 +1,10 @@
+Package: omis
+Type: Package
+Title: Online Market Informaion System
+Version: 1.0
+Date: 2016-06-28
+Author: Richard Blades
+Maintainer: Richard Blades <richardblades7@icloud.com>
+Description: ??? Note to enable data accumulation, LazyData MUST be set to false.
+License: ???
+LazyData: false

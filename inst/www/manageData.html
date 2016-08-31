@@ -1,0 +1,728 @@
+<!------------------------------------------------------------------------------------------
+ 	
+ 	m a n a g e D a t a . h t m l
+ 	
+------------------------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Environment
+ 	
+ 	Note, "<meta http-equiv...>" must be first element after <head> (including comments)
+ 	else some IE versions will ignore it. Edge mode tells IE to display content in the
+ 	highest mode available. Chrome=1 activates Googles Chrome Frame browser plugin to
+ 	seamlessley enhance IE6-IE9.
+ 	
+    OpenCPU's setting was as below
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />	
+ 	
+	To ensure proper rendering and touch zooming: 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	To disable mobile device zooming and replace with scrolling:
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,
+    user-scalable=no" />
+------------------------------------------------------------------------------------------->
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Identity
+ 	
+ 	Place favicon.ico and apple-touch-icon.png in the root directory 
+ 	
+------------------------------------------------------------------------------------------->
+    <title>omis</title>
+    <meta name="author" content="richard blades" />
+	<meta name="Online Market Intelligence System" content="" />
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	CSS
+	
+------------------------------------------------------------------------------------------->
+	<link href="css/reset.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap-theme.css" rel="stylesheet" media="screen"/>
+	<link href="jquery-ui/jquery-ui.css" rel="stylesheet" media="screen"/>
+	<link href="css/omis.css" rel="stylesheet" media="screen"/>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	JavaScript
+	
+------------------------------------------------------------------------------------------->
+	<script src="js/prefixFree.min.js" type="application/javascript"></script>
+	<script src="jquery/jquery.min.js"></script>
+	<script src="opencpu/opencpu-0.4.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
+	<script src="jquery-ui/jquery-ui.js"></script>
+	<script src="jquery.easing.min.js"></script>
+	<script src="js/omis.js"></script>
+<!------------------------------------------------------------------------------------------
+ 	HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries.  
+------------------------------------------------------------------------------------------->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+	
+	
+	
+<script>
+$(document).ready(function() {
+//------------------------------------------------------------------------------------------
+// 	
+//	Initialise 
+//
+//------------------------------------------------------------------------------------------
+	$("#preserveConfirm").prop("checked", false);
+	$("#restoreConfirm1").prop("checked", false);
+	$("#restoreConfirm2").prop("checked", false);
+	
+//------------------------------------------------------------------------------------------
+//	Set title 
+//------------------------------------------------------------------------------------------
+	$("#title").text("Manage Data");
+
+//------------------------------------------------------------------------------------------
+//	Initial messages 
+//------------------------------------------------------------------------------------------
+	alertBox("HTML5");
+	alertBox("database", "alertBox03");
+	
+//------------------------------------------------------------------------------------------
+// 	Disable future, dependant options
+//------------------------------------------------------------------------------------------
+    $("#linkCSV").attr("disabled", "disabled")
+	$("#linkJSON").attr("disabled", "disabled")
+	$("#linkMarkdown").attr("disabled", "disabled")
+	$("#linkPrint").attr("disabled", "disabled")
+	$("#linkRData").attr("disabled", "disabled")
+	$("#linkTab").attr("disabled", "disabled")	
+
+
+
+//------------------------------------------------------------------------------------------
+// 	
+// 	Upload CSV file to OpenCPU server => session1
+//
+//------------------------------------------------------------------------------------------
+  	$("#uploadButton").on("click", function() {
+  	
+//------------------------------------------------------------------------------------------
+// Clear away previous alert messages
+//------------------------------------------------------------------------------------------
+        $("#alertBox01 .alert").remove(); 	
+        	   
+//------------------------------------------------------------------------------------------
+// 	Extract prefix (file type removed) of file name from file path 
+//------------------------------------------------------------------------------------------
+		var csvFileName = $("#csvFileName")[0].files[0];
+		var csvFilePrefix;
+		if	(!csvFileName) {
+  			alertBox("input", null, "Please select a CSV file");
+		  	return;
+		}
+		var filePath = document.getElementById('csvFileName').value;
+		if (filePath) {
+			var startIndex = (filePath.indexOf('\\') >= 0 ? filePath.lastIndexOf('\\') :
+				filePath.lastIndexOf('/'));
+			var fileName = filePath.substring(startIndex);
+			if (fileName.indexOf('\\') === 0 || fileName.indexOf('/') === 0) {
+				fileName = fileName.substring(1);
+			}
+			csvFilePrefix = fileName.substring(0, fileName.lastIndexOf('.'));
+//			alert(
+//				"filePath = " 	+ filePath + "\n" +
+//				"fileName = " 	+ fileName + "\n" +
+//				"csvFilePrefix = " + csvFilePrefix);			
+		}
+		
+//------------------------------------------------------------------------------------------
+// 	Determine if CSV file includes a header
+//------------------------------------------------------------------------------------------
+		var csvHeader = $("#csvHeader").val().toUpperCase();
+		if	(document.getElementById('csvHeader').checked) {
+    		csvHeader = "checked";
+		} else {
+    		csvHeader = "unchecked";
+		} 	
+  	
+//------------------------------------------------------------------------------------------
+// 	Disable the upload button during upload
+//------------------------------------------------------------------------------------------
+		$("#uploadButton").attr("disabled", "disabled");
+		
+//------------------------------------------------------------------------------------------
+// 	Perform the request
+//------------------------------------------------------------------------------------------
+		var req = ocpu.call(
+			"uploadCSV", 
+			{
+			csvFileName		: csvFileName,
+			csvFilePrefix 	: csvFilePrefix,
+			csvHeader		: csvHeader
+			},
+			function(session1) {
+
+//------------------------------------------------------------------------------------------
+//	Examine session object
+//------------------------------------------------------------------------------------------
+//				alert("JSON.stringify(session1)\n" + JSON.stringify(session1, null, 4));
+//				console.log(JSON.stringify(session1,null, 4));
+//				console.log(session1);
+				
+//------------------------------------------------------------------------------------------
+//	Display R session properties
+//------------------------------------------------------------------------------------------
+//				$("#session1Key").text(session1.getKey());
+//				$("#session1Loc").text(session1.getLoc());
+
+//------------------------------------------------------------------------------------------
+//	Display R session console
+//------------------------------------------------------------------------------------------
+				session1.getConsole(function(consoleText) {
+					$("#outputText01").text(consoleText);
+				});
+				        						 
+//------------------------------------------------------------------------------------------
+// 	Retrieve R session object 
+//------------------------------------------------------------------------------------------
+//				session1.getObject(function(data) {
+//					console.log(JSON.stringify(data, null, 4));
+//				});
+
+//------------------------------------------------------------------------------------------
+//	Enable export of R data frame (session1 object)
+//------------------------------------------------------------------------------------------
+				$("#linkCSV").attr("href", session1.getLoc() + "R/.val/csv");
+				$("#linkJSON").attr("href", session1.getLoc() + "R/.val/json");
+				$("#linkMarkdown").attr("href", session1.getLoc() + "R/.val/md");
+				$("#linkPrint").attr("href", session1.getLoc() + "R/.val/print");
+				$("#linkRData").attr("href", session1.getLoc() + "R/.val/rda");
+				$("#linkTab").attr("href", session1.getLoc() + "R/.val/tab");
+			}
+		);
+		req.always(function() {
+		  	$("#uploadButton").removeAttr("disabled")
+		});
+//------------------------------------------------------------------------------------------
+// 	Enable export CSV buttons upon successful CSV upload
+//------------------------------------------------------------------------------------------
+		req.done(function() {
+		  	$("#linkCSV").removeAttr("disabled")
+			$("#linkJSON").removeAttr("disabled")
+			$("#linkMarkdown").removeAttr("disabled")
+			$("#linkPrint").removeAttr("disabled")
+			$("#linkRData").removeAttr("disabled")
+			$("#linkTab").removeAttr("disabled")	
+		});
+//------------------------------------------------------------------------------------------
+// 	If R returns an error, alert the error message
+//------------------------------------------------------------------------------------------
+		req.fail(function() {
+			alertBox("server", null, req.responseText);
+		});
+  	});															   // $("#uploadButton")
+
+
+
+//------------------------------------------------------------------------------------------
+//
+// 	Process Examine / Export OMIS Database 
+//
+//------------------------------------------------------------------------------------------
+	var omisURL	= "/ocpu/library/omis/";
+//	var omisURL	= "../library/"; 				 // ??? Something overiding this in API?
+	
+	
+	
+//------------------------------------------------------------------------------------------
+//
+// 	Examine OMIS data via AJAX (jqXHR jQuery XMLHttpRequest). 
+//
+//------------------------------------------------------------------------------------------
+	$("#examineButton").click(function(e) {
+  		e.preventDefault();
+		
+		var dataFormat 	= $("#dataFormat").val();
+		var omisData	= $("#omisData").val();
+		var requestURL;
+		
+ 		$("#ajaxStatus").empty();
+ 		$("#ajaxStatus").removeClass("alert-success alert-danger alert-warning");
+		$("#ajaxText").empty();
+		$("#ajaxHeaders").empty();
+        $("#alertBox02 .alert").remove(); 		   // Clear away previous alert messages
+        
+  		if (omisData == "data/" && dataFormat != "") {
+  			alertBox("directory", "alertBox02");
+			return;
+  		} else {
+  			requestURL = omisURL + omisData + dataFormat; 
+
+  		}
+  		
+		if (dataFormat == "rda") {  
+  			alertBox("RData", "alertBox02");
+			return;
+		}
+		
+  		ajaxRequest 			= {};
+		ajaxRequest.data		= {};
+  		ajaxRequest.type 		= "GET"; 
+  		ajaxRequest.url 		= requestURL;
+  		ajaxRequest.complete 	= function(jqXHR) {
+			$("#ajaxStatus").text("HTTP " + jqXHR.status + " " + jqXHR.statusText);
+			if 			(jqXHR.status == 0) {
+  				alertBox("HTTP0", "alertBox02");
+			} else if 	(jqXHR.status >= 200 && jqXHR.status < 300) {
+				$("#ajaxStatus").addClass("alert-success");
+			} else if 	(jqXHR.status >= 400) {
+				$("#ajaxStatus").addClass("alert-danger");
+			} else {
+				$("#ajaxStatus").addClass("alert-warning");
+			}
+			$("#ajaxText").text(jqXHR.responseText);
+			$("#ajaxHeaders").text(jqXHR.getAllResponseHeaders());
+		}
+
+		if (jQuery.isEmptyObject(ajaxRequest.data)) {
+			ajaxRequest.contentType = 'application/x-www-form-urlencoded';
+		}
+//		alert(JSON.stringify(ajaxRequest, null, 4));
+
+  		$('#ajaxSpinner').show();
+		
+		var req = $.ajax(ajaxRequest).always(function(){
+ 			$('#ajaxSpinner').hide();
+		});	
+    });																    // examineButton  
+    
+
+
+//------------------------------------------------------------------------------------------
+//
+// 	Export OMIS data 
+//
+//	The following combination also works but only when "event.preventDefault()" has been
+//	removed. The consequence of the latter is that a "return" invokes the default "href".
+//	Note, the setting of "href" is best achieved via .prop rather than ".attr".
+//
+//		$("#exportButton").attr('target', target); 	  	  
+//		$("#exportButton").prop("href", requestURL);
+//
+//	Better still is the use of "$(location)" as it can live alongside 
+//	"event.preventDefault()". The issue is I haven't managed to alter the "target" setting
+//	prior to despatch.
+//
+//		$(location).attr('href', requestURL).attr('target', target);
+//
+//	Hence, pure JavaScript won the day:
+//
+//		window.open(requestURL, target);
+//
+//------------------------------------------------------------------------------------------
+	$("#exportButton").click(function(event) {
+ 		event.preventDefault(); 					
+
+		var dataFormat 	= $("#dataFormat").val();
+		var omisData	= $("#omisData").val();
+		var requestURL;
+		var target;
+		
+ 		$("#ajaxStatus").empty();
+ 		$("#ajaxStatus").removeClass("alert-success alert-danger alert-warning");
+		$("#ajaxText").empty();
+		$("#ajaxHeaders").empty();
+        $("#alertBox02 .alert").remove(); 		   // Clear away previous alert messages
+        
+  		if (omisData == "data/" && dataFormat != "") {
+  			alertBox("directory", "alertBox02");
+			return; 	// Needs preventDefault to ensure href isn't actioned by default 
+  		} else {
+  			requestURL = omisURL + omisData + dataFormat;
+  		}
+  		
+		if (dataFormat == "csv" || dataFormat == "rda" || dataFormat == "tab") {  
+			target = "_self";
+		} else { 
+			target = "_blank";
+		} 
+		
+		window.open(requestURL, target);
+    
+    }); 																 // exportButton  
+  	
+
+
+//------------------------------------------------------------------------------------------
+//
+// 	Preserve OMIS data 
+//
+//	OMIS collects and records data (e.g. footfall and login security profiles) within its
+//	package database. As such, omis package upgrades will overwrite any data collected
+//  since the previous installation. Thus a facility has been created that preserves these
+//  changes via a snapshot. 
+//
+//------------------------------------------------------------------------------------------
+	$("#preserveButton").click(function(event) {
+ 		event.preventDefault(); 
+ 		
+//------------------------------------------------------------------------------------------
+// Clear away previous alert messages
+//------------------------------------------------------------------------------------------
+        $("#alertBox03 .alert-info").remove();
+
+//------------------------------------------------------------------------------------------
+// 	Ensure user confirms Preserve prior to actioning.
+//------------------------------------------------------------------------------------------
+		if ($("#preserveConfirm").prop("checked")) {
+			$("#preserveButton").attr("disabled", "disabled");
+		  	$("#restoreButton").attr("disabled", "disabled");
+		} else {
+			alertBox("note", "alertBox03", "Please confirm Preserve");
+			return;
+		}
+
+//------------------------------------------------------------------------------------------
+// 	Perform the request
+//------------------------------------------------------------------------------------------
+		var req = ocpu.call(
+			"preserve", 
+			{
+ 			externalDir	: "/var/lib/omis/"
+			},
+			function(session1) {
+
+//------------------------------------------------------------------------------------------
+//	Display R session console
+//------------------------------------------------------------------------------------------
+				session1.getConsole(function(consoleText) {
+					$("#outputText03").text(consoleText);
+				});
+			}
+		);
+		
+		req.always(function() {
+		  	$("#preserveConfirm").prop("checked", false);
+		  	$("#preserveButton").removeAttr("disabled")
+		  	$("#restoreButton").removeAttr("disabled")
+		});
+		
+//------------------------------------------------------------------------------------------
+// 	Report successful snapshot
+//------------------------------------------------------------------------------------------
+		req.done(function() {
+			alertBox("note", "alertBox03", "OMIS database snapshot has been taken.");
+		});
+		
+//------------------------------------------------------------------------------------------
+// 	If R returns an error, alert the error message
+//------------------------------------------------------------------------------------------
+		req.fail(function() {
+			alertBox("server", "alertBox03", req.responseText);
+		});
+    
+    }); 															   // preserveButton  
+  	
+
+
+//------------------------------------------------------------------------------------------
+//
+// 	Restore OMIS data 
+//
+//	This function restores the OMIS database from a previous snapshot taken prior to the 
+//	OMIS R package upgrade.  
+//
+//------------------------------------------------------------------------------------------
+	$("#restoreButton").click(function(event) {
+ 		event.preventDefault(); 
+ 		
+//------------------------------------------------------------------------------------------
+// Clear away previous alert messages
+//------------------------------------------------------------------------------------------
+        $("#alertBox03 .alert-info").remove();
+
+//------------------------------------------------------------------------------------------
+// 	Ensure user confirms Restore prior to actioning.
+//------------------------------------------------------------------------------------------
+		if ($("#restoreConfirm1").prop("checked") &&
+		    $("#restoreConfirm2").prop("checked")) {
+			$("#preserveButton").attr("disabled", "disabled");
+		  	$("#restoreButton").attr("disabled", "disabled");  	
+		} else {
+			alertBox("note", "alertBox03", "Please confirm Restore");
+			return;
+		}
+
+//------------------------------------------------------------------------------------------
+// 	Perform the request
+//------------------------------------------------------------------------------------------
+		var req = ocpu.call(
+			"restore", 
+			{
+ 			externalDir	: "/var/lib/omis/"
+			},
+			function(session1) {
+
+//------------------------------------------------------------------------------------------
+//	Display R session console
+//------------------------------------------------------------------------------------------
+				session1.getConsole(function(consoleText) {
+					$("#outputText03").text(consoleText);
+				});
+			}
+		);
+		
+		req.always(function() {
+		  	$("#preserveButton").removeAttr("disabled")
+		  	$("#restoreButton").removeAttr("disabled")
+		  	$("#restoreConfirm1").prop("checked", false);
+		  	$("#restoreConfirm2").prop("checked", false);
+		});
+		
+//------------------------------------------------------------------------------------------
+// 	Report successful restore
+//------------------------------------------------------------------------------------------
+		req.done(function() {
+			alertBox("note", "alertBox03", "OMIS database has been restored from snapshot");
+		});
+		
+//------------------------------------------------------------------------------------------
+// 	If R returns an error, alert the error message
+//------------------------------------------------------------------------------------------
+		req.fail(function() {
+			alertBox("server", "alertBox03", req.responseText);
+		});
+    
+    }); 															    // restoreButton 
+     
+});																		  // $(document)
+</script>
+
+
+
+</head>
+<body>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Nav
+	
+	Common loadable <nav> brought in via AJAX.
+	
+------------------------------------------------------------------------------------------->
+<div id="ajaxNav"></div>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Page Content
+	
+------------------------------------------------------------------------------------------->
+<div class="container-fluid margin10">
+
+  	<div class="page-header">
+    	<h3 id="title"></h3>
+  	</div>
+  	
+  	<div class="row well margin0L0R"> 								<!-- Row 1 start -->
+    	<div class="col-xs-5 col-md-4 well backgroundWhite">   	 
+    	 			
+			<form role="form" enctype="multipart/form-data">
+				<fieldset>
+					<legend>Upload CSV File</legend>
+					<input class="btn btn-default btn-xs restrainButton" type="file"
+						id="csvFileName">
+					<br>
+					<button id="uploadButton" type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-cloud-upload"></span>
+						&nbsp;&nbsp;
+						Upload
+					</button>
+					&nbsp;					
+					<input type="checkbox" id="csvHeader" checked="checked">
+						&nbsp;
+						CSV Headers?
+					<br><br><br>
+					
+					<legend>Reformat this Upload for Export</legend>
+					<a class="btn btn-default btn-xs" role="button" target="_self"
+						id="linkCSV">CSV</a>
+					<a class="btn btn-default btn-xs" role="button" target="_blank"
+						id="linkJSON">JSON</a>
+					<a class="btn btn-default btn-xs" role="button" target="_blank"
+						id="linkMarkdown">Markdown</a>
+					<a class="btn btn-default btn-xs" role="button" target="_blank"
+						id="linkPrint">Print</a>
+					<a class="btn btn-default btn-xs" role="button" target="_self"
+						id="linkRData">R Data</a>
+					<a class="btn btn-default btn-xs" role="button" target="_self"
+						id="linkTab">Table</a>
+				</fieldset>
+			</form>
+		</div>
+				
+    	<div class="col-xs-7 col-md-8">
+			<div id="alertBox01"></div>
+    		<pre id="outputText01" class="pre-scrollable"></pre> 		  
+    	</div>    
+  	</div>															  <!-- Row 1 end -->  
+  	
+  	
+  	
+  	<div class="clearBoth"></div>	
+    	
+  	<div class="row well margin0L0R"> 								<!-- Row 2 start -->
+		<div class="col-xs-5 col-md-4 well backgroundWhite">   	   	
+			<form>
+				<fieldset>
+					<legend>Examine & Export OMIS Database</legend>
+					<select class="form-control" id="omisData">
+						<option value="data/" selected="selected">
+							OMIS Directory</option>
+						<hr>
+						<option value="data/nuts1QuarterEmp/">
+							NUTS-1 Quarter Employment</option>
+						<option value="data/nuts1QuarterProf/">
+							NUTS-1 Quarter Professions</option>
+						<option value="data/nuts1QuarterSIC/">
+							NUTS-1 Quarter SIC Workforce</option>
+						<option value="data/nuts1Year/">
+							NUTS-1 Year</option>
+						<hr>
+						<option value="data/nuts3Quarter/">
+							NUTS-3 Quarter</option>
+						<option value="data/nuts3Year/">
+							NUTS-3 Year</option>
+						<hr>
+						<option value="data/nuts4HourFootfall/">
+							NUTS-4 Hour Footfall</option>
+						<option value="data/nuts4MonthOccupancy/">
+							NUTS-4 Month Occupancy</option>
+						<option value="data/nuts4Quarter/">
+							NUTS-4 Quarter</option>
+						<option value="data/nuts4Year/">
+							NUTS-4 Year</option>
+						<hr>
+						<option value="data/sessionsDemo/">
+							Sessions Demo (Example Download)</option>
+					</select>
+					<br>
+					<select class="form-control" id="dataFormat">
+						<option value="csv">CSV</option>
+						<option value="json">JSON</option>
+						<option value="md">Markdown</option>
+						<option value="" selected="selected">Print</option>
+						<option value="rda">R Data</option>
+						<option value="tab">Table</option>
+					</select>
+					<br>
+					<button id="examineButton" type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-folder-open"></span>
+						&nbsp;&nbsp;
+						Examine
+					</button>
+					&nbsp;&nbsp;
+					<a class="btn btn-default" role="button" target="_blank"
+						id="exportButton" href="../data/">
+						<span class="glyphicon glyphicon-cloud-download"></span>
+						&nbsp;&nbsp;
+						Export
+					</a>
+					<img src="spinner.gif" id="ajaxSpinner" class="alignRight"/>
+				</fieldset>
+			</form>	
+		</div>
+		
+		<div class="col-xs-7 col-md-8">
+			<div id="alertBox02"></div>
+			<pre id="ajaxText" class="pre-scrollable"></pre>
+			<pre id="ajaxStatus"></pre>
+			<pre id="ajaxHeaders" class="pre-scrollable"></pre>
+			
+		</div>
+  	</div>															  <!-- Row 2 end --> 
+  	
+  	
+  	
+  	<div class="clearBoth"></div>	
+    	
+  	<div class="row well margin0L0R"> 								<!-- Row 3 start -->
+		<div class="col-xs-5 col-md-4 well backgroundWhite">   	   	
+			<form>
+				<fieldset>
+					<legend>Preserve OMIS Database</legend>
+					<button id="preserveButton" type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-camera"></span>
+						&nbsp;&nbsp;
+						Preserve
+					</button>
+					&nbsp;
+					<input type="checkbox" id="preserveConfirm">&nbsp;Confirm
+					<br><br><br>
+					
+					<legend>Restore OMIS Database</legend>
+					<button id="restoreButton" type="button" class="btn btn-default">
+						<span class="glyphicon glyphicon-hourglass"></span>
+						&nbsp;&nbsp;
+						Restore
+					</button>
+					&nbsp;					
+					<input type="checkbox" id="restoreConfirm1">&nbsp;Confirm
+					&nbsp;&nbsp;	
+					<input type="checkbox" id="restoreConfirm2">&nbsp;& Again!
+					
+<!------------------------------------------------------------------------------------------
+ 	The following block is by far the prettier, working in both Safari (Mac OS X) and
+ 	Chrome (Windows), but alas IE11 (Windows) cannot handle it! Kept here for future
+ 	reference...
+--------------------------------------------------------------------------------------------
+					<div class="btn-group">
+						<button type="button" class="btn btn-default">
+							Confirm&nbsp;
+							<input type="checkbox" id="restoreConfirm1">
+						</button>
+						<button type="button" class="btn btn-default">
+							& Again!&nbsp;
+							<input type="checkbox" id="restoreConfirm2">
+						</button>
+						<button id="restoreButton" type="button" class="btn btn-default">
+							<span class="glyphicon glyphicon-hourglass"></span>
+							&nbsp;&nbsp;
+							Restore
+						</button>
+					</div>
+------------------------------------------------------------------------------------------->
+					
+				</fieldset>
+			</form>	
+		</div>
+		
+		<div class="col-xs-7 col-md-8">
+			<div id="alertBox03"></div>
+    		<pre id="outputText03" class="pre-scrollable"></pre> 	   	   
+		</div>
+  	</div>														 	  <!-- Row 3 end --> 
+  	 	
+</div>  														   <!-- Page Content -->
+
+
+
+</body>
+</html>

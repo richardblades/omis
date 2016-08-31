@@ -1,0 +1,181 @@
+<!------------------------------------------------------------------------------------------
+ 	
+ 	i n d e x . h t m l
+ 	
+	All href="#" have been removed from <a> to prevent unneccessary scrolling. 
+	
+------------------------------------------------------------------------------------------->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Environment
+ 	
+ 	Note, "<meta http-equiv...>" must be first element after <head> (including comments)
+ 	else some IE versions will ignore it. Edge mode tells IE to display content in the
+ 	highest mode available. Chrome=1 activates Googles Chrome Frame browser plugin to
+ 	seamlessley enhance IE6-IE9.
+ 	
+    OpenCPU's setting was as below
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />	
+ 	
+	To ensure proper rendering and touch zooming: 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	To disable mobile device zooming and replace with scrolling:
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,
+    user-scalable=no" />
+------------------------------------------------------------------------------------------->
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	Identity
+ 	
+ 	Place favicon.ico and apple-touch-icon.png in the root directory 
+ 	
+------------------------------------------------------------------------------------------->
+    <title>omis</title>
+    <meta name="author" content="richard blades" />
+	<meta name="Online Market Intelligence System" content="" />
+
+
+
+<!------------------------------------------------------------------------------------------
+ 	
+ 	CSS
+ 	
+------------------------------------------------------------------------------------------->
+	<link href="css/reset.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap.css" rel="stylesheet" media="screen"/>
+	<link href="bootstrap/css/bootstrap-theme.css" rel="stylesheet" media="screen"/>
+	<link href="jquery-ui/jquery-ui.css" rel="stylesheet" media="screen"/>
+	<link href="css/omis.css" rel="stylesheet" media="screen"/>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	JavaScript
+	
+------------------------------------------------------------------------------------------->
+	<script src="js/prefixFree.min.js" type="application/javascript"></script>
+	<script src="jquery/jquery.min.js"></script>
+	<script src="opencpu/opencpu-0.4.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
+	<script src="jquery-ui/jquery-ui.js"></script>
+	<script src="jquery.easing.min.js"></script>
+	<script src="js/omis.js"></script>
+<!------------------------------------------------------------------------------------------
+    HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
+------------------------------------------------------------------------------------------->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.../js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  
+  
+    
+<script>
+$(document).ready(function() {
+//------------------------------------------------------------------------------------------
+//
+//	Initialise
+//
+//------------------------------------------------------------------------------------------
+
+//------------------------------------------------------------------------------------------
+//	Set title
+//------------------------------------------------------------------------------------------
+	$("#title").text("Online Market Intelligence System");
+
+});																		  // $(document)
+</script>
+
+
+    
+</head>
+<body>
+
+
+
+<!------------------------------------------------------------------------------------------
+	
+	Nav
+	
+	Common loadable <nav> brought in via AJAX.
+	
+------------------------------------------------------------------------------------------->
+<div id="ajaxNav"></div>
+
+
+
+<!------------------------------------------------------------------------------------------
+
+	Page Content
+	
+------------------------------------------------------------------------------------------->
+<div class="container-fluid margin10">
+
+  	<div class="page-header">
+    	<h3 id="title"></h3>
+  	</div>
+
+<!------------------------------------------------------------------------------------------
+	New Blog and About.
+	
+	<section class="container-fluid height300 bg-three">
+	<section class="container-fluid height500 bg-two">
+	
+------------------------------------------------------------------------------------------->
+	<section class="container-fluid height500 bgOAC02">
+		<article class="jumbotron parallax alphaLow whiteText">
+    		<h1>Welcome to OMIS<span class="copyright">&nbsp;1.0&nbsp;&copy;</span></h1>
+		</article>
+	</section>
+	
+	<section class="container-fluid heightAuto bgOAC03">
+		<article class="parallax">
+			<h1>News</h1>
+			<p>Version 1.0 launched Monday 5th September 2016.</p>
+			<p>Version 1.1 is scheduled for November 2016 and will include enhanced Footfall analytics.</p>
+		</article>
+		<article class="parallax">
+			<h1>About</h1>
+			<p>OMIS is a joint venture between Scarborough Borough Council and the University of Hull.<p>
+		</article>
+	</section>
+	
+	<section class="container-fluid heightAuto bgNone">
+		<div class="row parallax">
+			<img src="../www/image/footfall.jpg" class="img-responsive col-xs-2">
+			<img src="../www/image/retailTurnoverStack.jpg" class="img-responsive col-xs-2">
+			<img src="../www/image/turnoverIndependent01.jpg"
+				class="img-responsive col-xs-2">
+			<div class="col-xs-2"></div>
+			<img src="../www/image/SBC.png" class="img-responsive col-xs-2">
+			<img src="../www/image/UoH.png" class="img-responsive col-xs-2">
+		</div>
+	</section>
+
+
+
+<!------------------------------------------------------------------------------------------
+	ScrollTop
+	Standard jQuery function.
+------------------------------------------------------------------------------------------->
+	<a id="scrolltop" title="Scroll to top">
+		<span class="glyphicon glyphicon-chevron-up"></span>
+	</a>
+   
+</div> 															   <!-- Page Content -->
+ 
+ 
+    
+</body>
+</html>

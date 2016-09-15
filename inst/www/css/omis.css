@@ -236,7 +236,7 @@ p {
 .navbar-brand { 
 	font-size: 14px;
 }
-@media (min-width: 992px) {
+@media only screen and (min-width: 992px) {
 	.navbar-brand { 
 		font-size: 18px;
 	}
@@ -258,7 +258,7 @@ p {
 	can cut short secondary drop down menus on lower screen widths. Hence 18px used as a      
    	compromise for screens > 992px.	
 ------------------------------------------------------------------------------------------*/
-@media (min-width: 992px) {
+@media only screen and (min-width: 992px) {
 	.navbar-nav a { 
 		font-size: 18px; 
 	}
@@ -311,6 +311,11 @@ p {
 }
 .roundBorder {
 	border-radius: 3px !important; 
+}
+.scrollable-menu {
+	height: auto;
+	max-height: 490px;
+	overflow: auto;
 }
 .table th, .table td { 
     border: none !important; 

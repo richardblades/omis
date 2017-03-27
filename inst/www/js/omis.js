@@ -37,6 +37,8 @@ function alertBox(message, target, text) {
 
 	var server 		= '<div class="alert alert-danger alert-dismissible" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>OpenCPU server error... ' + text + '</div>';
 
+	var spatialWait	= '<div class="alert alert-info alert-dismissible" role="alert"> <button type="button" class="close" data-dismiss="alert" aria-label="Close"> <span aria-hidden="true">&times;</span> </button>Note... These graphics demand a great deal of calculation - your request may take up to 10 seconds</div>';
+	
 	switch(target) {
 		case 	""				:	var target = $("#alertBox01");	break;
 		case 	" "				:	var target = $("#alertBox01");	break;
@@ -58,6 +60,7 @@ function alertBox(message, target, text) {
 		case 	"options"		:	target.append(options);			break;
 		case 	"RData"			:	target.append(RData);			break;
 		case 	"server"		:	target.append(server);			break;
+		case 	"spatialWait"	:	target.append(spatialWait);		break;
 		default					:	target.append(missing);
 	}
 }																// alertBox function end

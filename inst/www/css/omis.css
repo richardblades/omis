@@ -70,6 +70,19 @@ p {
 ???#fileCSV {
   	width: 100%;
 }
+#oacLegend {
+	bottom: auto;
+	left: 15px;
+	opacity: 0; /* hide the image until selected */
+	position: absolute; /* allows scroll, unlike "fixed" */
+	right: 15px;
+	top: 0px; 
+	z-index: -1; /* initially below thumbnails */
+}
+#oacLegend:target { /* reveal upon selection */
+	opacity: 1; 
+	z-index: 1; /* move above spatialMenu */
+	}
 #outputGraphic01,
 #outputGraphic02,
 #outputGraphic03 {
@@ -107,6 +120,9 @@ p {
 	background: transparent; 									  
 	color: rgb(185,222,240);								  /* Bootstrap 3.0 "blue" */
 } 
+#spatialMenu {
+	z-index: 0;
+}
 .alignRight {
 	float: right;
 }
@@ -155,6 +171,22 @@ p {
   	margin-bottom: 60px;
   	padding: 0px;
 }
+.bgOAC04 {
+	background: url("../image/OAC04.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+  	background-size: cover;
+  	border-radius: 5px;
+  	margin-bottom: 60px;
+  	padding: 0px;
+}
+.bgOAC05 {
+	background: url("../image/OAC05.jpg") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+  	background-size: cover;
+  	border-radius: 5px;
+  	margin-bottom: 60px;
+  	padding: 0px;
+}
 .blackText {
 	color: rgba(0,0,0,0.8);
 }
@@ -177,6 +209,9 @@ p {
 .fromTo {
 	text-align: left; 
 	width: 50px;
+}
+.group {
+	font-size: 12px;
 }
 .growthFactor {
 	display: inline-block;
@@ -316,6 +351,12 @@ p {
 	height: auto;
 	max-height: 490px;
 	overflow: auto;
+}
+.subGroup {
+	border-left-style: solid;
+	border-left-width: 14px;
+	font-size: 12px;
+	padding-left: 3px;
 }
 .table th, .table td { 
     border: none !important; 

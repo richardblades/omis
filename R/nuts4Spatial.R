@@ -36,8 +36,8 @@ nuts4Spatial <- function (
 	library(raster) 													   # intersect()
 	library(rgdal)
 	library(rgeos)
-	library(tmaptools) 											# append_data(), sbind()
-    library(spdplyr) 													 # Spatial dplyr
+##	library(tmaptools) 											# append_data(), sbind()
+##  library(spdplyr) 													 # Spatial dplyr
     library(dplyr) 	  # dplyr functions take precidence as last load. Else dplyr::select
 
 

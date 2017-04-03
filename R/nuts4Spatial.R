@@ -227,11 +227,11 @@ nuts4Spatial <- function (
 	    fitBounds(-1.064683, 54.132420, -0.2123534, 54.5621437) %>%
 	    setMaxBounds(-1.064683, 54.132420, -0.2123534, 54.5621437) %>%
 	    setView(-0.39650828, 54.283761, zoom=15)
-	    
+
 #-------------------------------------------------------------------------------------------
 #	Note, "selfcontained=FALSE" is vital with Ubuntu environment. Else Pandoc fails with
 #	OpenCPU server message "strsplit(version_info....", which under RStudio-Server equates
 #	to "Segmentation fault... Error: pandoc document conversion failed with error 139"
 #-------------------------------------------------------------------------------------------
-	htmlwidgets::saveWidget(widget, "leafletMap.html", selfcontained=FALSE)
+	htmlwidgets::saveWidget(widget, "leafletWidget.html", selfcontained=FALSE)
 }

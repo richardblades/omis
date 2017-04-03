@@ -169,7 +169,7 @@ $(document).ready(function() {
 			options			: options
 			},
 			function(session1) {
-				$("iframe").attr('src', session1.getFileURL("leafletMap.html"));
+				$("iframe").attr('src', session1.getFileURL("leafletWidget.html"));
 			})
 			.always(function() {
 				$("#plotButton").removeAttr("disabled");
